@@ -440,116 +440,411 @@ body {
   pointer-events: auto;
 }
 
+/* ══════════════════════════════════════
+   激活弹窗 ── 「深金曜石」重设计
+   ══════════════════════════════════════ */
+
+/* 粒子光晕动画 */
+@keyframes goldAurora {
+  0%,100% { opacity:0.6; transform:scale(1) rotate(0deg); }
+  50%     { opacity:1;   transform:scale(1.08) rotate(8deg); }
+}
+@keyframes shimmerSweep {
+  0%   { transform:translateX(-100%) skewX(-15deg); }
+  100% { transform:translateX(400%) skewX(-15deg); }
+}
+@keyframes popupEntrance {
+  0%   { opacity:0; transform:translate(-50%,-44%) scale(0.88); filter:blur(4px); }
+  60%  { opacity:1; filter:blur(0px); }
+  100% { opacity:1; transform:translate(-50%,-44%) scale(1); }
+}
+@keyframes popupExit {
+  0%   { opacity:1; transform:translate(-50%,-44%) scale(1); }
+  100% { opacity:0; transform:translate(-50%,-44%) scale(0.92); }
+}
+@keyframes rowSlideIn {
+  0%   { opacity:0; transform:translateX(-14px); }
+  100% { opacity:1; transform:translateX(0); }
+}
+@keyframes badgePop {
+  0%   { opacity:0; transform:scale(0.3); }
+  70%  { transform:scale(1.15); }
+  100% { opacity:1; transform:scale(1); }
+}
+
+/* 弹窗主体 */
 .popup {
   position: absolute;
   left: 50%; top: 50%;
-  transform: translate(-50%, -38%) scale(0.8) rotateX(12deg);
-  transform-style: preserve-3d;
-  perspective: 800px;
-  width: 320px;
-  background: rgba(12,18,40,0.82);
-  border-radius: 20px;
-  padding: 20px 14px 16px;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  transform: translate(-50%, -44%) scale(0.88);
+  width: 328px;
+
+  /* 曜石深底 + 微暖色调 */
+  background: linear-gradient(160deg,
+    rgba(11,13,28,0.97) 0%,
+    rgba(8,10,22,0.99) 55%,
+    rgba(13,10,24,0.98) 100%);
+
+  border-radius: 22px;
+  padding: 22px 16px 18px;
+
+  /* 多层次边框与光晕 */
+  border: 1px solid rgba(255,200,60,0.18);
+  box-shadow:
+    0 0 0 1px rgba(255,190,40,0.06),
+    0 2px 4px rgba(255,160,0,0.08),
+    0 16px 48px rgba(0,0,0,0.8),
+    0 32px 72px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,215,80,0.16),
+    inset 0 -1px 0 rgba(255,130,0,0.06),
+    inset 1px 0 0 rgba(255,200,60,0.04),
+    inset -1px 0 0 rgba(255,200,60,0.04);
+
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   z-index: 20;
   opacity: 0;
-  transition: opacity 0.45s ease, transform 0.5s cubic-bezier(0.22,1.2,0.36,1);
+  transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.22,1.15,0.36,1);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* 顶部黄金光带 */
+.popup::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,210,60,0.0) 10%,
+    rgba(255,210,80,0.75) 35%,
+    rgba(255,230,100,0.95) 50%,
+    rgba(255,210,80,0.75) 65%,
+    rgba(255,210,60,0.0) 90%,
+    transparent 100%);
   pointer-events: none;
 }
+
+/* 右上角琥珀光晕装饰 */
+.popup::after {
+  content: '';
+  position: absolute;
+  top: -50px; right: -50px;
+  width: 140px; height: 140px;
+  background: radial-gradient(circle at center,
+    rgba(255,180,0,0.1) 0%,
+    rgba(255,140,0,0.04) 45%,
+    transparent 70%);
+  pointer-events: none;
+}
+
+/* 左下角橙红色对称光晕 */
+.popup-corner-glow {
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 110px; height: 110px;
+  background: radial-gradient(circle at center,
+    rgba(232,0,28,0.08) 0%,
+    rgba(255,80,0,0.04) 45%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .popup.show {
   opacity: 1;
-  transform: translate(-50%, -42%) scale(1) rotateX(0deg);
+  transform: translate(-50%, -44%) scale(1);
   pointer-events: auto;
+  animation: popupEntrance 0.55s cubic-bezier(0.22,1.15,0.36,1) both;
 }
-.popup-icon-wrap { display:flex; justify-content:center; margin-bottom:12px; position:relative; z-index:2; }
-.shield-wrap { position:relative; width:44px; height:44px; overflow:visible; }
+
+/* 扫光动效层 */
+.popup-shimmer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 22px;
+  pointer-events: none;
+  z-index: 1;
+}
+.popup-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 60px;
+  background: linear-gradient(90deg, transparent, rgba(255,220,100,0.07), transparent);
+  animation: shimmerSweep 3.5s ease-in-out infinite;
+}
+
+/* 图标区 */
+.popup-icon-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 2;
+}
+
+/* 盾牌容器扩大 */
+.shield-wrap { position:relative; width:52px; height:52px; overflow:visible; }
+
+/* 光晕环 - 更柔和的金色 */
 .shield-ring {
-  position: absolute; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,210,60,0.55) 0%, rgba(255,160,0,0.0) 68%);
-  animation: shieldRing 2s ease-out infinite;
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255,210,60,0.45) 0%,
+    rgba(255,160,0,0.12) 50%,
+    rgba(255,160,0,0.0) 70%);
+  animation: shieldRing 2.2s ease-out infinite;
 }
-.shield-ring:nth-child(1) { width:58px; height:58px; top:-7px; left:-7px; animation-delay:0s; }
-.shield-ring:nth-child(2) { width:74px; height:74px; top:-15px; left:-15px; animation-delay:0.65s; }
-.shield-ring:nth-child(3) { width:90px; height:90px; top:-23px; left:-23px; animation-delay:1.3s; }
+.shield-ring:nth-child(1) { width:68px; height:68px; top:-8px; left:-8px; animation-delay:0s; }
+.shield-ring:nth-child(2) { width:86px; height:86px; top:-17px; left:-17px; animation-delay:0.7s; }
+.shield-ring:nth-child(3) { width:104px; height:104px; top:-26px; left:-26px; animation-delay:1.4s; }
 @keyframes shieldRing {
-  0%   { opacity:1; transform:scale(0.7); }
-  60%  { opacity:0.55; }
-  100% { opacity:0; transform:scale(1.15); }
+  0%   { opacity:0.9; transform:scale(0.65); }
+  55%  { opacity:0.4; }
+  100% { opacity:0; transform:scale(1.18); }
 }
+
+/* 盾牌主体 - 更立体的渐变 */
 .shield-body {
-  position: absolute; width:44px; height:44px; border-radius:50%;
-  background: linear-gradient(135deg,#FFD000,#FF8C00);
-  display:flex; align-items:center; justify-content:center;
-  box-shadow: 0 4px 20px rgba(255,180,0,0.55), 0 0 0 3px rgba(255,210,0,0.25);
-  animation: shieldPulse 2.5s ease-in-out infinite;
+  position: absolute;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 135deg,
+    #FF8800 0deg,
+    #FFD000 90deg,
+    #FFEE80 150deg,
+    #FFD000 210deg,
+    #FF9500 360deg
+  );
+  display: flex; align-items: center; justify-content: center;
+  box-shadow:
+    0 0 0 2px rgba(255,215,80,0.2),
+    0 4px 24px rgba(255,175,0,0.65),
+    0 0 40px rgba(255,200,0,0.3),
+    inset 0 1px 2px rgba(255,255,200,0.5);
+  animation: shieldPulse 2.8s ease-in-out infinite;
 }
 @keyframes shieldPulse {
-  0%,100% { box-shadow:0 4px 20px rgba(255,180,0,0.55),0 0 0 3px rgba(255,210,0,0.25); }
-  50%     { box-shadow:0 4px 28px rgba(255,180,0,0.8), 0 0 0 5px rgba(255,210,0,0.35); }
+  0%,100% {
+    box-shadow: 0 0 0 2px rgba(255,215,80,0.2), 0 4px 24px rgba(255,175,0,0.65), 0 0 40px rgba(255,200,0,0.3), inset 0 1px 2px rgba(255,255,200,0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(255,215,80,0.3), 0 4px 32px rgba(255,185,0,0.85), 0 0 56px rgba(255,200,0,0.45), inset 0 1px 2px rgba(255,255,200,0.5);
+  }
 }
-.shield-svg { width:24px; height:24px; }
+.shield-svg { width:26px; height:26px; }
+
+/* 弹窗标题 */
 .popup-title {
-  text-align:center; font-size:13px; font-weight:700; color:#fff;
-  margin-bottom:14px; white-space:nowrap;
-  text-shadow:0 2px 16px rgba(255,255,255,0.2);
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(240,245,255,0.92);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 12px rgba(255,200,80,0.2), 0 0 30px rgba(255,150,0,0.1);
+  position: relative; z-index: 2;
 }
-.benefit-list { margin-bottom:14px; }
+
+/* 标题下方装饰分隔线 */
+.popup-title-sep {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 0 4px;
+}
+.popup-title-sep::before,
+.popup-title-sep::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,200,60,0.22), transparent);
+}
+.popup-title-sep-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: rgba(255,210,60,0.5);
+  box-shadow: 0 0 6px rgba(255,200,0,0.4);
+}
+
+/* 权益列表 */
+.benefit-list { margin-bottom: 12px; position: relative; z-index: 2; }
+
 .benefit-row {
-  display:flex; align-items:center; padding:5px 4px; margin-bottom:6px;
-  opacity:0; transform:translateX(-20px);
-  transition:opacity 0.45s ease, transform 0.45s cubic-bezier(0.34,1.3,0.64,1);
+  display: flex;
+  align-items: center;
+  padding: 8px 10px 8px 0;
+  margin-bottom: 5px;
+
+  /* 卡片化背景 */
+  border-radius: 10px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.055);
+  border-left: 2px solid rgba(255,190,50,0.22);
+
+  opacity: 0;
+  transform: translateX(-14px);
+  transition:
+    opacity 0.42s ease,
+    transform 0.42s cubic-bezier(0.34,1.25,0.64,1),
+    border-left-color 0.35s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease;
 }
-.benefit-row:last-child { margin-bottom:0; }
-.benefit-row.visible { opacity:1; transform:translateX(0); }
+.benefit-row:last-child { margin-bottom: 0; }
+.benefit-row.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+/* 激活态 - 金色左边框 + 微光背景 */
+.benefit-row.sweep {
+  border-left-color: rgba(255,210,0,0.7);
+  background: linear-gradient(90deg,
+    rgba(255,185,0,0.07) 0%,
+    rgba(255,255,255,0.02) 60%,
+    transparent 100%);
+  box-shadow: inset 2px 0 8px rgba(255,180,0,0.1);
+}
+
+/* 图标 - 圆角方形，金色调 */
 .row-icon {
-  width:18px; height:18px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:9px; font-weight:800; flex-shrink:0; margin-right:7px;
-  background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.25);
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-left: 8px;
+  margin-right: 9px;
+  background: linear-gradient(145deg,
+    rgba(255,200,0,0.22) 0%,
+    rgba(255,130,0,0.10) 100%);
+  color: rgba(255,215,80,1);
+  border: 1px solid rgba(255,195,40,0.28);
+  box-shadow: inset 0 1px 0 rgba(255,240,100,0.12), 0 2px 6px rgba(255,150,0,0.08);
 }
-.row-text { flex:1; }
+
+.row-text { flex: 1; }
 .row-main {
-  font-size:12px; font-weight:600; color:rgba(240,245,255,0.95);
-  display:flex; align-items:flex-start; justify-content:space-between;
-  flex-wrap:nowrap; gap:6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(230,238,255,0.88);
+  display: flex; align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: nowrap; gap: 6px;
+  line-height: 1.4;
 }
+
+/* 已激活 badge - 精致胶囊 */
 .row-badge {
-  display:inline-flex; align-items:center; gap:3px;
-  font-size:10px; font-weight:600; color:rgba(210,215,230,0.65);
-  opacity:0; transform:scale(0.5);
-  transition:opacity 0.35s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  white-space:nowrap; flex-shrink:0; align-self:flex-start;
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 9.5px; font-weight: 700;
+  color: rgba(0,230,140,0.9);
+  background: rgba(0,200,120,0.12);
+  border: 1px solid rgba(0,210,120,0.22);
+  border-radius: 20px;
+  padding: 1px 6px 1px 3px;
+  opacity: 0; transform: scale(0.4);
+  transition:
+    opacity 0.3s ease,
+    transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap; flex-shrink: 0; align-self: flex-start;
+  margin-top: 1px;
 }
-.row-badge.show { opacity:1; transform:scale(1); }
+.row-badge.show {
+  opacity: 1;
+  transform: scale(1);
+}
 .badge-check {
-  width:14px; height:14px; border-radius:50%; background:#00C878;
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:0 0 6px rgba(0,200,120,0.6);
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00E890, #00B060);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 6px rgba(0,220,130,0.6), 0 0 2px rgba(0,180,100,0.5);
 }
-.badge-check svg { width:8px; height:8px; }
-.progress-wrap { margin-bottom:10px; }
+.badge-check svg { width: 7px; height: 7px; }
+
+/* 进度条 - 超细霓虹金 */
+.progress-wrap { margin-bottom: 10px; position: relative; z-index: 2; }
 .progress-track {
-  height:8px; background:rgba(255,255,255,0.1); border-radius:6px;
-  overflow:hidden; margin-bottom:8px;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 99px;
+  overflow: visible;
+  position: relative;
+  margin-bottom: 10px;
 }
 .progress-fill {
-  height:100%; border-radius:6px;
-  background:linear-gradient(90deg,#FFB800 0%,#FFD000 60%,#fff5a0 100%);
-  box-shadow:0 0 10px rgba(255,210,0,0.7),0 0 20px rgba(255,180,0,0.35);
-  width:0%; transition:width 0.4s ease;
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg,
+    #FF9800 0%,
+    #FFD000 50%,
+    #FFE860 80%,
+    #FFFAAA 100%);
+  box-shadow:
+    0 0 0 1px rgba(255,220,0,0.4),
+    0 0 8px rgba(255,210,0,0.9),
+    0 0 16px rgba(255,185,0,0.5);
+  width: 0%;
+  transition: width 0.4s ease;
+  position: relative;
 }
+/* 进度尖端发光粒子 */
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  right: -4px; top: 50%;
+  transform: translateY(-50%);
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #FFEF80;
+  box-shadow:
+    0 0 10px rgba(255,240,80,1),
+    0 0 5px rgba(255,210,0,0.9),
+    0 0 2px rgba(255,255,200,0.8);
+  opacity: 1;
+  transition: opacity 0.1s;
+}
+
+/* 状态文字与箭头 */
 .arrow-bounce {
-  color:#FF8C00; display:inline-block;
-  animation:arrowBounce 0.7s ease-in-out infinite;
+  color: #FFA040;
+  display: inline-block;
+  animation: arrowBounce 0.75s ease-in-out infinite;
 }
-@keyframes arrowBounce { 0%,100%{transform:translateX(0);} 50%{transform:translateX(4px);} }
+@keyframes arrowBounce {
+  0%,100% { transform:translateX(0); }
+  50%     { transform:translateX(5px); }
+}
+
+/* 放弃按钮 */
 .cancel-btn {
-  text-align:center; font-size:11px; color:rgba(220,225,240,0.7);
-  cursor:pointer; text-decoration:underline; text-underline-offset:2px;
-  letter-spacing:0.3px; margin-top:10px;
+  text-align: center;
+  font-size: 10.5px;
+  color: rgba(180,190,220,0.45);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  margin-top: 12px;
+  display: block;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(180,190,220,0.18);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  transition: color 0.2s, border-color 0.2s;
+}
+.cancel-btn:hover {
+  color: rgba(220,225,240,0.7);
+  border-color: rgba(220,225,240,0.35);
 }
 
 .pay-sheet {
@@ -620,19 +915,27 @@ body {
 }
 
 .abandon-btn {
-  position:absolute; bottom:18px; left:0; right:0;
-  text-align:center; font-size:11px; color:rgba(160,165,180,0.45);
-  cursor:pointer; z-index:41; pointer-events:none; opacity:0;
-  transition:opacity 0.3s ease;
+  position: absolute; bottom: 16px; left: 0; right: 0;
+  text-align: center; font-size: 10.5px;
+  color: rgba(150,155,175,0.35);
+  cursor: pointer; z-index: 41; pointer-events: none; opacity: 0;
+  letter-spacing: 0.4px;
+  transition: opacity 0.3s ease;
 }
-.abandon-btn.show { opacity:1; pointer-events:auto; }
+.abandon-btn.show { opacity: 1; pointer-events: auto; }
 
+/* 完成态 - 温暖金绿光晕 */
 .success-overlay {
-  position:absolute; inset:-20px; border-radius:20px;
-  background:radial-gradient(ellipse at 50% 40%,rgba(0,220,130,0.18) 0%,transparent 70%);
-  opacity:0; pointer-events:none; transition:opacity 0.5s ease;
+  position: absolute; inset: -20px; border-radius: 24px;
+  background: radial-gradient(
+    ellipse at 50% 35%,
+    rgba(0,230,130,0.14) 0%,
+    rgba(255,190,0,0.06) 40%,
+    transparent 70%);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.6s ease;
 }
-.success-overlay.show { opacity:1; }
+.success-overlay.show { opacity: 1; }
 </style>
 </head>
 <body>
@@ -781,6 +1084,8 @@ body {
   <!-- ═══ 激活弹窗 ═══ -->
   <div class="popup" id="popup">
     <div class="success-overlay" id="successOverlay"></div>
+    <div class="popup-shimmer"></div>
+    <div class="popup-corner-glow"></div>
     <div class="popup-icon-wrap">
       <div class="shield-wrap">
         <div class="shield-ring"></div>
@@ -825,27 +1130,28 @@ body {
       </div>
     </div>
     <div class="popup-title" id="popupTitle">正在为被保人 <span style="color:#FFD000;font-weight:900;">*然</span> 领取专属保障权益</div>
+    <div class="popup-title-sep"><div class="popup-title-sep-dot"></div><div class="popup-title-sep-dot"></div><div class="popup-title-sep-dot"></div></div>
     <div class="benefit-list">
       <div class="benefit-row" id="row0">
-        <div class="row-icon">¥</div>
+        <div class="row-icon">💰</div>
         <div class="row-text">
           <div class="row-main"><span><span style="color:#FFD000;font-weight:900;">1.68元</span>现金体验奖励已锁定</span><div class="row-badge" id="badge0"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div></div>
         </div>
       </div>
       <div class="benefit-row" id="row1">
-        <div class="row-icon">免</div>
+        <div class="row-icon">🎁</div>
         <div class="row-text">
           <div class="row-main"><span>30天保障<span style="color:#FFD000;font-weight:900;">免费体验</span>，享无理由退</span><div class="row-badge" id="badge1"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div></div>
         </div>
       </div>
       <div class="benefit-row" id="row2">
-        <div class="row-icon">升</div>
+        <div class="row-icon">🏆</div>
         <div class="row-text">
           <div class="row-main"><span>30天后45元/月开启<span style="color:#FFD000;font-weight:900;">全年保障</span></span><div class="row-badge" id="badge2"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div></div>
         </div>
       </div>
       <div class="benefit-row" id="row3">
-        <div class="row-icon">退</div>
+        <div class="row-icon">🔄</div>
         <div class="row-text">
           <div class="row-main"><span>付费保障开启即生效，32天未使用可全额退</span><div class="row-badge" id="badge3"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div></div>
         </div>
@@ -861,8 +1167,8 @@ body {
         <span class="arrow-bounce">→</span>
         <span>即将验证身份领取保障权益</span>
       </div>
-      <div style="margin-top:8px;font-size:10px;color:rgba(220,225,240,0.9);line-height:1.6;text-align:left;padding:0 4px;">
-        消费者权益保护服务提示：您已进入投保流程，本产品由众安在线保险股份有限公司承保，由美团保提供保险经纪服务，为了保障您的权益，我们将全程记录您的操作。查看<span style="color:#4A9EFF;">《客户告知书》</span>
+      <div style="margin-top:8px;font-size:9.5px;color:rgba(180,190,215,0.55);line-height:1.65;text-align:left;padding:6px 8px;background:rgba(255,255,255,0.03);border-radius:7px;border:1px solid rgba(255,255,255,0.06);">
+        消费者权益保护服务提示：您已进入投保流程，本产品由众安在线保险股份有限公司承保，由美团保提供保险经纪服务，为了保障您的权益，我们将全程记录您的操作。查看<span style="color:rgba(100,170,255,0.7);">《客户告知书》</span>
       </div>
       <div class="cancel-btn" id="cancelBtn" onclick="cancelActivation()" style="display:none;">放弃保障权益</div>
     </div>
