@@ -988,17 +988,72 @@ body {
     if (done) return;
     cancelAnimationFrame(rafId);
     clearInterval(cdInterval);
+
     const popup = document.getElementById('popup');
     const mask  = document.getElementById('mask');
+
+    // 弹窗淡出动画
     popup.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
     popup.style.opacity = '0';
     popup.style.transform = 'translate(-50%, -44%) scale(0.9)';
     mask.style.transition = 'background 0.25s ease';
     mask.style.background = 'rgba(0,0,0,0)';
+
     setTimeout(() => {
-      popup.style.display = 'none';
+      // 隐藏遮罩 & 背景
       mask.classList.remove('show');
       document.getElementById('pageContent').classList.remove('blurred');
+
+      // 清除 popup 所有 inline style，恢复 CSS class 控制
+      popup.removeAttribute('style');
+      popup.classList.remove('show', 'hide-for-pay');
+      mask.removeAttribute('style');
+      mask.classList.remove('dim-for-pay');
+
+      // 重置进度条
+      const fill = document.getElementById('progressFill');
+      fill.style.width = '0%';
+      fill.classList.remove('done');
+
+      // 重置成功光晕
+      document.getElementById('successOverlay').classList.remove('show');
+
+      // 重置每行动画状态
+      for (let i = 0; i < 4; i++) {
+        const el = document.getElementById('row' + i);
+        if (el) { el.classList.remove('visible', 'sweep'); }
+        const badge = el ? el.querySelector('.row-badge') : null;
+        if (badge) badge.classList.remove('show');
+        rowDone[i]   = false;
+        badgeDone[i] = false;
+      }
+
+      // 重置盾牌图标
+      const sc = document.getElementById('shieldCheck');
+      if (sc) sc.style.opacity = '0';
+      shieldDone = false;
+
+      // 重置标题 & 状态文字
+      document.getElementById('popupTitle').removeAttribute('style');
+      const statusEl = document.getElementById('statusText');
+      if (statusEl) statusEl.innerHTML =
+        '<span class="arrow-bounce">→</span><span>即将验证身份领取保障权益</span>';
+
+      // 隐藏放弃按钮
+      document.getElementById('cancelBtn').style.display = 'none';
+      document.getElementById('abandonBtn').classList.remove('show');
+
+      // 收起支付面板
+      document.getElementById('paySheet').classList.remove('show');
+
+      // 重置热区（允许再次点击）
+      document.getElementById('startBtn').style.pointerEvents = '';
+
+      // 重置所有状态变量
+      done       = false;
+      startTime  = null;
+      rafId      = null;
+      cdInterval = null;
     }, 260);
   }
 </script>
