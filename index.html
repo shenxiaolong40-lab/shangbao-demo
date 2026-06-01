@@ -936,6 +936,81 @@ body {
   transition: opacity 0.6s ease;
 }
 .success-overlay.show { opacity: 1; }
+
+/* ══════════════════════════════════════
+   投保可回溯 下浮层
+   ══════════════════════════════════════ */
+.disclosure-sheet {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.18);
+  z-index: 30;
+  transform: translateY(100%);
+  transition: transform 0.38s cubic-bezier(0.32,1.1,0.4,1);
+  pointer-events: none;
+}
+.disclosure-sheet.show { transform: translateY(0); pointer-events: auto; }
+
+.disc-header {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 18px 20px 14px;
+}
+.disc-brand-mt {
+  background: #FFD000; color: #1A1A1A;
+  font-size: 12px; font-weight: 800;
+  padding: 3px 9px; border-radius: 5px;
+  display: flex; align-items: center; gap: 4px;
+}
+.disc-sep { color: #CCCCCC; font-size: 18px; font-weight: 300; }
+.disc-brand-za {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; color: #333; font-weight: 600;
+}
+.disc-za-logo {
+  display: flex; align-items: center;
+}
+.disc-divider { height: 0.5px; background: #EEEEEE; }
+.disc-content { padding: 18px 20px 0; }
+.disc-title {
+  font-size: 20px; font-weight: 800; color: #1A1A1A;
+  margin-bottom: 10px;
+}
+.disc-tags {
+  display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.disc-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11.5px; color: #444;
+  background: #F5F7FA; padding: 4px 9px; border-radius: 4px;
+}
+.disc-tag-icon {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1.5px solid #AAB8CC;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.disc-tag-icon svg { width: 8px; height: 8px; }
+.disc-body {
+  font-size: 13px; color: #444; line-height: 1.75; margin-bottom: 18px;
+}
+.disc-body a { color: #FF6200; text-decoration: none; }
+.disc-confirm-btn {
+  margin: 0 20px 14px; height: 50px;
+  background: linear-gradient(90deg, #FFD000 0%, #FFBE00 100%);
+  border-radius: 25px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 700; color: #1A1A1A;
+  cursor: pointer; letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgba(255,190,0,0.38);
+  transition: opacity 0.15s;
+}
+.disc-confirm-btn:active { opacity: 0.85; }
+.disc-indicator {
+  width: 120px; height: 4px; border-radius: 2px;
+  background: #1A1A1A; opacity: 0.12;
+  margin: 0 auto 10px;
+}
 </style>
 </head>
 <body>
@@ -1080,6 +1155,46 @@ body {
 
   <!-- ═══ 遮罩 ═══ -->
   <div class="mask" id="mask"></div>
+
+  <!-- ═══ 投保可回溯下浮层 ═══ -->
+  <div class="disclosure-sheet" id="disclosureSheet">
+    <div class="disc-header">
+      <div class="disc-brand-mt">
+        <div class="brand-mt-m"></div>
+        美团保
+      </div>
+      <span class="disc-sep">|</span>
+      <div class="disc-brand-za">
+        <div class="disc-za-logo">
+          <svg width="48" height="16" viewBox="0 0 48 16" fill="none">
+            <path d="M2 8 Q4 3 8 8 Q12 13 16 8 Q20 3 24 8" stroke="#00A0E9" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <text x="26" y="12" font-size="11" font-weight="600" fill="#333" font-family="-apple-system,PingFang SC,sans-serif">众安保险</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="disc-divider"></div>
+    <div class="disc-content">
+      <div class="disc-title">消费者权益保障服务</div>
+      <div class="disc-tags">
+        <span class="disc-tag">
+          <span class="disc-tag-icon"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#AAB8CC" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          可安心理赔
+        </span>
+        <span class="disc-tag">
+          <span class="disc-tag-icon"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#AAB8CC" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          操作可回溯
+        </span>
+        <span class="disc-tag">
+          <span class="disc-tag-icon"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#AAB8CC" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          服务有保障
+        </span>
+      </div>
+      <p class="disc-body">您即将进入投保流程，本产品由众安在线财产保险股份有限公司承保，由重庆金诚互诺保险经纪有限公司提供保险中介服务，点击查看 <a href="#">客户告知书</a></p>
+    </div>
+    <div class="disc-confirm-btn" id="discBtn" onclick="onDisclosureConfirm()">我知道了 (<span id="discCount">3</span>)</div>
+    <div class="disc-indicator"></div>
+  </div>
 
   <!-- ═══ 激活弹窗 ═══ -->
   <div class="popup" id="popup">
@@ -1252,17 +1367,46 @@ body {
     else if (!done) { onComplete(); }
   }
 
+  /* ── 投保可回溯下浮层 ── */
+  let discCountdown = 3;
+  let discTimer = null;
+
   function startActivation() {
     document.getElementById('startBtn').style.pointerEvents = 'none';
     document.getElementById('pageContent').classList.add('blurred');
-    const mask = document.getElementById('mask');
-    const popup = document.getElementById('popup');
-    mask.classList.add('show');
+    document.getElementById('mask').classList.add('show');
     setTimeout(() => {
+      document.getElementById('disclosureSheet').classList.add('show');
+      startDisclosureCountdown();
+    }, 150);
+  }
+
+  function startDisclosureCountdown() {
+    discCountdown = 3;
+    document.getElementById('discCount').textContent = discCountdown;
+    discTimer = setInterval(() => {
+      discCountdown--;
+      if (discCountdown <= 0) {
+        clearInterval(discTimer);
+        discTimer = null;
+        onDisclosureConfirm();
+      } else {
+        document.getElementById('discCount').textContent = discCountdown;
+      }
+    }, 1000);
+  }
+
+  function onDisclosureConfirm() {
+    clearInterval(discTimer);
+    discTimer = null;
+    const sheet = document.getElementById('disclosureSheet');
+    sheet.classList.remove('show');
+    setTimeout(() => {
+      const popup = document.getElementById('popup');
       popup.classList.add('show');
       document.getElementById('cancelBtn').style.display = '';
       setTimeout(() => requestAnimationFrame(tick), 300);
-    }, 150);
+    }, 400);
   }
 
   function onComplete() {
@@ -1333,6 +1477,8 @@ body {
 
   function cancelActivation() {
     if (done) return;
+    clearInterval(discTimer); discTimer = null;
+    document.getElementById('disclosureSheet').classList.remove('show');
     cancelAnimationFrame(rafId);
     clearInterval(cdInterval);
     const popup = document.getElementById('popup');
