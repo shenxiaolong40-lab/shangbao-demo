@@ -1011,6 +1011,133 @@ body {
   background: #1A1A1A; opacity: 0.12;
   margin: 0 auto 10px;
 }
+
+/* ── 弹窗底部双按钮 ── */
+.popup-action-row {
+  display: none;
+  gap: 10px;
+  margin-top: 14px;
+}
+.popup-action-row.show { display: flex; }
+.popup-btn-secondary {
+  flex: 0 0 42%;
+  height: 42px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 21px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600;
+  color: rgba(220,230,255,0.88);
+  cursor: pointer;
+  transition: background 0.15s;
+  position: relative; z-index: 2;
+}
+.popup-btn-secondary:active { background: rgba(255,255,255,0.14); }
+.popup-btn-primary {
+  flex: 1;
+  height: 42px;
+  background: linear-gradient(90deg, #FFD000 0%, #FFBE00 100%);
+  border-radius: 21px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 800;
+  color: #1A1A1A;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(255,190,0,0.5);
+  letter-spacing: 0.5px;
+  transition: opacity 0.15s;
+  position: relative; z-index: 2;
+}
+.popup-btn-primary:active { opacity: 0.85; }
+
+/* ── 被保人信息修改浮层 ── */
+.insured-sheet {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.22);
+  z-index: 50;
+  transform: translateY(100%);
+  transition: transform 0.38s cubic-bezier(0.32,1.1,0.4,1);
+  pointer-events: none;
+}
+.insured-sheet.show { transform: translateY(0); pointer-events: auto; }
+
+.insured-sheet-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 0.5px solid #EEEEEE;
+}
+.insured-sheet-title { font-size: 17px; font-weight: 700; color: #1A1A1A; }
+.insured-sheet-close {
+  font-size: 22px; color: #BBBBBB; cursor: pointer;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* 关系选择器 */
+.relation-tabs {
+  display: flex; gap: 8px;
+  padding: 14px 20px 0;
+}
+.relation-tab {
+  flex: 1; height: 38px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 500; color: #666;
+  background: #F5F5F5; border: 1.5px solid transparent;
+  cursor: pointer; transition: all 0.18s;
+}
+.relation-tab.active {
+  background: #FFF8E6; border-color: #FFD000;
+  color: #B07800; font-weight: 700;
+}
+
+/* 被保人信息卡片 */
+.insured-info-card {
+  margin: 14px 20px 0;
+  background: #F8F9FB;
+  border-radius: 12px;
+  padding: 2px 16px;
+  border: 1px solid #EEEEEE;
+}
+.insured-field {
+  display: flex; align-items: center;
+  padding: 12px 0;
+  border-bottom: 0.5px solid #F0F0F0;
+  font-size: 14px;
+}
+.insured-field:last-child { border-bottom: none; }
+.insured-field-label { color: #999; width: 68px; flex-shrink: 0; }
+.insured-field-value { flex: 1; color: #1A1A1A; font-weight: 500; }
+.insured-field-value.empty { color: #CCCCCC; font-weight: 400; }
+.insured-field-arrow { color: #CCCCCC; font-size: 16px; }
+
+.insured-hint {
+  margin: 10px 20px 0;
+  font-size: 11.5px; color: #999; line-height: 1.65;
+  padding: 8px 12px;
+  background: #FFFBEF;
+  border-radius: 7px;
+  border: 1px solid #FFE8A0;
+}
+.insured-hint span { color: #FF8800; }
+
+.insured-confirm-btn {
+  margin: 16px 20px;
+  height: 50px;
+  background: linear-gradient(90deg, #FFD000 0%, #FFBE00 100%);
+  border-radius: 25px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 700; color: #1A1A1A;
+  cursor: pointer; letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgba(255,190,0,0.38);
+  transition: opacity 0.15s;
+}
+.insured-confirm-btn:active { opacity: 0.85; }
+.insured-indicator {
+  width: 120px; height: 4px; border-radius: 2px;
+  background: #1A1A1A; opacity: 0.12;
+  margin: 0 auto 10px;
+}
 </style>
 </head>
 <body>
@@ -1282,10 +1409,15 @@ body {
         <span class="arrow-bounce">→</span>
         <span>即将验证身份领取保障权益</span>
       </div>
-      <div style="margin-top:8px;font-size:9.5px;color:rgba(180,190,215,0.55);line-height:1.65;text-align:left;padding:6px 8px;background:rgba(255,255,255,0.03);border-radius:7px;border:1px solid rgba(255,255,255,0.06);">
+      <div id="disclaimerText" style="margin-top:8px;font-size:9.5px;color:rgba(180,190,215,0.55);line-height:1.65;text-align:left;padding:6px 8px;background:rgba(255,255,255,0.03);border-radius:7px;border:1px solid rgba(255,255,255,0.06);">
         消费者权益保护服务提示：您已进入投保流程，本产品由众安在线保险股份有限公司承保，由美团保提供保险经纪服务，为了保障您的权益，我们将全程记录您的操作。查看<span style="color:rgba(100,170,255,0.7);">《客户告知书》</span>
       </div>
       <div class="cancel-btn" id="cancelBtn" onclick="cancelActivation()" style="display:none;">放弃保障权益</div>
+      <!-- 完成后显示的双操作按钮 -->
+      <div class="popup-action-row" id="popupActionRow">
+        <div class="popup-btn-secondary" onclick="openInsuredSheet()">修改信息</div>
+        <div class="popup-btn-primary" onclick="confirmActivation()">确认激活</div>
+      </div>
     </div>
   </div>
 
@@ -1326,6 +1458,53 @@ body {
       <div class="pay-success-text">保障已激活</div>
       <div class="pay-success-sub">您的保障权益已成功开启</div>
     </div>
+  </div>
+
+  <!-- ═══ 被保人信息修改浮层 ═══ -->
+  <div class="insured-sheet" id="insuredSheet">
+    <div class="insured-sheet-header">
+      <div class="insured-sheet-title">修改被保人信息</div>
+      <div class="insured-sheet-close" onclick="closeInsuredSheet()">×</div>
+    </div>
+
+    <!-- 关系选择 -->
+    <div class="relation-tabs">
+      <div class="relation-tab active" id="rel0" onclick="selectRelation(0)">本人</div>
+      <div class="relation-tab" id="rel1" onclick="selectRelation(1)">配偶</div>
+      <div class="relation-tab" id="rel2" onclick="selectRelation(2)">父母</div>
+      <div class="relation-tab" id="rel3" onclick="selectRelation(3)">子女</div>
+    </div>
+
+    <!-- 被保人信息卡片 -->
+    <div class="insured-info-card" id="insuredInfoCard">
+      <div class="insured-field">
+        <span class="insured-field-label">姓名</span>
+        <span class="insured-field-value" id="insuredName">张*然</span>
+        <span class="insured-field-arrow">›</span>
+      </div>
+      <div class="insured-field">
+        <span class="insured-field-label">证件类型</span>
+        <span class="insured-field-value" id="insuredIdType">居民身份证</span>
+        <span class="insured-field-arrow">›</span>
+      </div>
+      <div class="insured-field">
+        <span class="insured-field-label">证件号码</span>
+        <span class="insured-field-value" id="insuredIdNum">3101**********5678</span>
+        <span class="insured-field-arrow">›</span>
+      </div>
+      <div class="insured-field">
+        <span class="insured-field-label">手机号码</span>
+        <span class="insured-field-value" id="insuredPhone">150****5678</span>
+        <span class="insured-field-arrow">›</span>
+      </div>
+    </div>
+
+    <div class="insured-hint" id="insuredHint">
+      当前为本人投保，保障权益将与您的账户直接绑定。<span>切换被保人后需重新填写信息。</span>
+    </div>
+
+    <div class="insured-confirm-btn" onclick="closeInsuredSheet()">确认</div>
+    <div class="insured-indicator"></div>
   </div>
 
 </div><!-- /phone -->
@@ -1411,19 +1590,69 @@ body {
 
   function onComplete() {
     done = true;
-    const fill = document.getElementById('progressFill');
-    fill.style.width = '100%';
+    document.getElementById('progressFill').style.width = '100%';
     document.getElementById('successOverlay').classList.add('show');
     document.getElementById('popupTitle').style.color = '#fff';
-    const statusEl = document.getElementById('statusText');
-    statusEl.innerHTML = '<span style="color:#fff;font-weight:600;">所有权益已锁定</span>';
+    document.getElementById('statusText').innerHTML = '<span style="color:#fff;font-weight:600;">所有权益已锁定</span>';
+    document.getElementById('disclaimerText').style.display = 'none';
     document.getElementById('cancelBtn').style.display = 'none';
     setTimeout(() => {
-      document.getElementById('popup').classList.add('hide-for-pay');
-      document.getElementById('mask').classList.add('dim-for-pay');
-      document.getElementById('paySheet').classList.add('show');
-      document.getElementById('abandonBtn').classList.add('show');
-    }, 1000);
+      document.getElementById('popupActionRow').classList.add('show');
+    }, 600);
+  }
+
+  function confirmActivation() {
+    document.getElementById('popup').classList.add('hide-for-pay');
+    document.getElementById('mask').classList.add('dim-for-pay');
+    document.getElementById('paySheet').classList.add('show');
+    document.getElementById('abandonBtn').classList.add('show');
+  }
+
+  /* ── 被保人信息修改浮层 ── */
+  const RELATION_DATA = [
+    {
+      name: '张*然', idType: '居民身份证', idNum: '3101**********5678', phone: '150****5678',
+      hint: '当前为<b>本人</b>投保，保障权益将与您的账户直接绑定。切换被保人后需重新填写信息。'
+    },
+    {
+      name: '', idType: '居民身份证', idNum: '', phone: '',
+      hint: '为<b>配偶</b>投保，需依法登记结婚，请确保姓名与证件信息一致。'
+    },
+    {
+      name: '', idType: '居民身份证', idNum: '', phone: '',
+      hint: '为<b>父母</b>投保，支持父亲或母亲，年龄须在18～65周岁之间。'
+    },
+    {
+      name: '', idType: '居民身份证', idNum: '', phone: '',
+      hint: '为<b>子女</b>投保，年龄需在30天～18周岁之间，超出年龄范围将无法承保。'
+    }
+  ];
+  let currentRelation = 0;
+
+  function openInsuredSheet() {
+    document.getElementById('insuredSheet').classList.add('show');
+  }
+
+  function closeInsuredSheet() {
+    document.getElementById('insuredSheet').classList.remove('show');
+  }
+
+  function selectRelation(idx) {
+    currentRelation = idx;
+    for (let i = 0; i < 4; i++) {
+      document.getElementById('rel' + i).classList.toggle('active', i === idx);
+    }
+    const d = RELATION_DATA[idx];
+    const setVal = (id, val, placeholder) => {
+      const el = document.getElementById(id);
+      if (val) { el.textContent = val; el.classList.remove('empty'); }
+      else { el.textContent = placeholder; el.classList.add('empty'); }
+    };
+    setVal('insuredName',   d.name,   '请填写姓名');
+    setVal('insuredIdType', d.idType, '居民身份证');
+    setVal('insuredIdNum',  d.idNum,  '请填写证件号码');
+    setVal('insuredPhone',  d.phone,  '请填写手机号码');
+    document.getElementById('insuredHint').innerHTML = d.hint;
   }
 
   /* ── 支付密码交互 ── */
@@ -1513,6 +1742,10 @@ body {
       document.getElementById('cancelBtn').style.display = 'none';
       document.getElementById('abandonBtn').classList.remove('show');
       document.getElementById('paySheet').classList.remove('show');
+      document.getElementById('insuredSheet').classList.remove('show');
+      document.getElementById('popupActionRow').classList.remove('show');
+      document.getElementById('disclaimerText').style.display = '';
+      selectRelation(0);
       resetPaySheet();
       document.getElementById('startBtn').style.pointerEvents = '';
       done=false; startTime=null; rafId=null; cdInterval=null;
