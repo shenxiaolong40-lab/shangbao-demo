@@ -1416,7 +1416,7 @@ body {
       <div class="cancel-btn" id="cancelBtn" onclick="cancelActivation()" style="display:none;">放弃保障权益</div>
       <!-- 完成后显示的双操作按钮 -->
       <div class="popup-action-row" id="popupActionRow">
-        <div class="popup-btn-primary" onclick="confirmActivation()">确认激活</div>
+        <div class="popup-btn-primary" id="confirmActivationBtn" onclick="confirmActivation()">确认激活</div>
         <div class="popup-btn-secondary" onclick="openInsuredSheet()">修改信息</div>
       </div>
     </div>
@@ -1585,6 +1585,9 @@ body {
       const popup = document.getElementById('popup');
       popup.classList.add('show');
       document.getElementById('cancelBtn').style.display = '';
+      // 立即展示「修改信息」，隐藏「确认激活」（等动画完成再显示）
+      document.getElementById('popupActionRow').classList.add('show');
+      document.getElementById('confirmActivationBtn').style.display = 'none';
       setTimeout(() => requestAnimationFrame(tick), 300);
     }, 400);
   }
@@ -1598,7 +1601,8 @@ body {
     document.getElementById('disclaimerText').style.display = 'none';
     document.getElementById('cancelBtn').style.display = 'none';
     setTimeout(() => {
-      document.getElementById('popupActionRow').classList.add('show');
+      // popupActionRow 已在弹窗出现时显示，此处只需把「确认激活」补出来
+      document.getElementById('confirmActivationBtn').style.display = '';
     }, 600);
   }
 
@@ -1746,6 +1750,7 @@ body {
       document.getElementById('abandonBtn').classList.remove('show');
       document.getElementById('paySheet').classList.remove('show');
       document.getElementById('insuredSheet').classList.remove('show');
+      document.getElementById('confirmActivationBtn').style.display = 'none';
       document.getElementById('popupActionRow').classList.remove('show');
       document.getElementById('disclaimerText').style.display = '';
       selectRelation(0);
