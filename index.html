@@ -1630,11 +1630,13 @@ body {
   let currentRelation = 0;
 
   function openInsuredSheet() {
+    document.getElementById('popup').classList.add('hide-for-pay');
     document.getElementById('insuredSheet').classList.add('show');
   }
 
   function closeInsuredSheet() {
     document.getElementById('insuredSheet').classList.remove('show');
+    document.getElementById('popup').classList.remove('hide-for-pay');
   }
 
   function selectRelation(idx) {
