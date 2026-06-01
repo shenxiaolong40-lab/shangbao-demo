@@ -1413,7 +1413,6 @@ body {
       <div id="disclaimerText" style="margin-top:8px;font-size:9.5px;color:rgba(180,190,215,0.55);line-height:1.65;text-align:left;padding:6px 8px;background:rgba(255,255,255,0.03);border-radius:7px;border:1px solid rgba(255,255,255,0.06);">
         消费者权益保护服务提示：您已进入投保流程，本产品由众安在线保险股份有限公司承保，由美团保提供保险经纪服务，为了保障您的权益，我们将全程记录您的操作。查看<span style="color:rgba(100,170,255,0.7);">《客户告知书》</span>
       </div>
-      <div class="cancel-btn" id="cancelBtn" onclick="cancelActivation()" style="display:none;">放弃保障权益</div>
       <!-- 完成后显示的双操作按钮 -->
       <div class="popup-action-row" id="popupActionRow">
         <div class="popup-btn-primary" id="confirmActivationBtn" onclick="confirmActivation()">确认激活</div>
@@ -1584,7 +1583,6 @@ body {
     setTimeout(() => {
       const popup = document.getElementById('popup');
       popup.classList.add('show');
-      document.getElementById('cancelBtn').style.display = '';
       // 立即展示「修改信息」，隐藏「确认激活」（等动画完成再显示）
       document.getElementById('popupActionRow').classList.add('show');
       document.getElementById('confirmActivationBtn').style.display = 'none';
@@ -1599,7 +1597,6 @@ body {
     document.getElementById('popupTitle').style.color = '#fff';
     document.getElementById('statusText').innerHTML = '<span style="color:#fff;font-weight:600;">所有权益已锁定</span>';
     document.getElementById('disclaimerText').style.display = 'none';
-    document.getElementById('cancelBtn').style.display = 'none';
     setTimeout(() => {
       // popupActionRow 已在弹窗出现时显示，此处只需把「确认激活」补出来
       document.getElementById('confirmActivationBtn').style.display = '';
@@ -1746,7 +1743,6 @@ body {
       document.getElementById('popupTitle').removeAttribute('style');
       const statusEl = document.getElementById('statusText');
       if (statusEl) statusEl.innerHTML = '<span class="arrow-bounce">→</span><span>即将验证身份领取保障权益</span>';
-      document.getElementById('cancelBtn').style.display = 'none';
       document.getElementById('abandonBtn').classList.remove('show');
       document.getElementById('paySheet').classList.remove('show');
       document.getElementById('insuredSheet').classList.remove('show');
