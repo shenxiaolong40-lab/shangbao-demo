@@ -1011,15 +1011,6 @@ body {
   background: #1A1A1A; opacity: 0.12;
   margin: 0 auto 10px;
 }
-.disc-modify-btn {
-  text-align: center;
-  font-size: 12px;
-  color: #999;
-  cursor: pointer;
-  padding: 6px 0 2px;
-  letter-spacing: 0.3px;
-}
-.disc-modify-btn span { color: #FF6200; text-decoration: underline; }
 
 /* ── 弹窗底部双按钮 ── */
 .popup-action-row {
@@ -1330,7 +1321,6 @@ body {
       <p class="disc-body">您即将进入投保流程，本产品由众安在线财产保险股份有限公司承保，由重庆金诚互诺保险经纪有限公司提供保险中介服务，点击查看 <a href="#">客户告知书</a></p>
     </div>
     <div class="disc-confirm-btn" id="discBtn" onclick="onDisclosureConfirm()">我知道了 (<span id="discCount">3</span>)</div>
-    <div class="disc-modify-btn" onclick="openInsuredSheet()">被保人：张*然 &nbsp;<span>修改信息</span></div>
     <div class="disc-indicator"></div>
   </div>
 
@@ -1589,9 +1579,6 @@ body {
   function onDisclosureConfirm() {
     clearInterval(discTimer);
     discTimer = null;
-    // 如果 insuredSheet 正在开着，先关闭再继续
-    document.getElementById('insuredSheet').classList.remove('show');
-    document.getElementById('popup').classList.remove('hide-for-pay');
     const sheet = document.getElementById('disclosureSheet');
     sheet.classList.remove('show');
     setTimeout(() => {
