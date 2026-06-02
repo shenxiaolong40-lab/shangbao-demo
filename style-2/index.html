@@ -1179,6 +1179,7 @@ body {
         <!-- 兼容JS引用 -->
         <div id="popupActionRow" class="popup-action-row"></div>
         <div id="confirmActivationBtn" style="display:none;"></div>
+        <div class="cancel-btn" id="cancelBtnInCard" onclick="cancelActivation()">放弃保障</div>
         <div id="disclaimerText" class="disclaimer-text">
           消费者权益保护服务提示：您已进入投保流程，本产品由众安在线财产保险股份有限公司承保，为保障您的权益，美团保将会全程记录您的操作，查看<span style="color:#1677FF;cursor:pointer;">客户告知书</span>
         </div>
@@ -1312,7 +1313,7 @@ body {
 
 <script>
   const TOTAL_MS = 6000;
-  let startTime = null, rafId = null, cdInterval = null, done = false;
+  let startTime = null, rafId = null, cdInterval = null, done = false, autoPayTimer = null;
   const cardAt      = [400, 1800, 3300];
   const cardBadgeAt = [1100, 2500, 4700];
   const cardDone    = [false, false, false];
@@ -1388,7 +1389,7 @@ body {
       statusEl.style.fontWeight = '600';
     }
     // 自动拉起支付，无需确认按钮
-    setTimeout(confirmActivation, 1200);
+    autoPayTimer = setTimeout(confirmActivation, 1200);
   }
 
   function confirmActivation() {
@@ -1497,7 +1498,8 @@ body {
   }
 
   function cancelActivation() {
-    if (done) return;
+    clearTimeout(autoPayTimer); autoPayTimer = null;
+    if (done) { done = false; }
     clearInterval(discTimer); discTimer = null;
     document.getElementById('disclosureSheet').classList.remove('show');
     cancelAnimationFrame(rafId);
