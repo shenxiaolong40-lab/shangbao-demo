@@ -421,7 +421,7 @@ body {
 }
 
 /* ==============================================
-   弹窗 / 支付面板（保持原有交互）
+   弹窗 / 支付面板
    ============================================== */
 .mask {
   position: absolute; inset: 0;
@@ -441,410 +441,220 @@ body {
 }
 
 /* ══════════════════════════════════════
-   激活弹窗 ── 「深金曜石」重设计
+   激活弹窗 ── 白色卡片风格
    ══════════════════════════════════════ */
 
-/* 粒子光晕动画 */
-@keyframes goldAurora {
-  0%,100% { opacity:0.6; transform:scale(1) rotate(0deg); }
-  50%     { opacity:1;   transform:scale(1.08) rotate(8deg); }
-}
-@keyframes shimmerSweep {
-  0%   { transform:translateX(-100%) skewX(-15deg); }
-  100% { transform:translateX(400%) skewX(-15deg); }
-}
 @keyframes popupEntrance {
-  0%   { opacity:0; transform:translate(-50%,-44%) scale(0.88); filter:blur(4px); }
-  60%  { opacity:1; filter:blur(0px); }
-  100% { opacity:1; transform:translate(-50%,-44%) scale(1); }
-}
-@keyframes popupExit {
-  0%   { opacity:1; transform:translate(-50%,-44%) scale(1); }
-  100% { opacity:0; transform:translate(-50%,-44%) scale(0.92); }
-}
-@keyframes rowSlideIn {
-  0%   { opacity:0; transform:translateX(-14px); }
-  100% { opacity:1; transform:translateX(0); }
-}
-@keyframes badgePop {
-  0%   { opacity:0; transform:scale(0.3); }
-  70%  { transform:scale(1.15); }
-  100% { opacity:1; transform:scale(1); }
+  0%   { opacity:0; transform:translateX(-50%) translateY(28px) scale(0.94); }
+  60%  { opacity:1; }
+  100% { opacity:1; transform:translateX(-50%) translateY(0) scale(1); }
 }
 
-/* 弹窗主体 */
+/* 弹窗外层容器 */
 .popup {
   position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -44%) scale(0.88);
-  width: 328px;
-
-  /* 曜石深底 + 微暖色调 */
-  background: linear-gradient(160deg,
-    rgba(11,13,28,0.97) 0%,
-    rgba(8,10,22,0.99) 55%,
-    rgba(13,10,24,0.98) 100%);
-
-  border-radius: 22px;
-  padding: 22px 16px 18px;
-
-  /* 多层次边框与光晕 */
-  border: 1px solid rgba(255,200,60,0.18);
-  box-shadow:
-    0 0 0 1px rgba(255,190,40,0.06),
-    0 2px 4px rgba(255,160,0,0.08),
-    0 16px 48px rgba(0,0,0,0.8),
-    0 32px 72px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,215,80,0.16),
-    inset 0 -1px 0 rgba(255,130,0,0.06),
-    inset 1px 0 0 rgba(255,200,60,0.04),
-    inset -1px 0 0 rgba(255,200,60,0.04);
-
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  left: 50%;
+  bottom: 78px;
+  transform: translateX(-50%) translateY(28px) scale(0.94);
+  width: 335px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   z-index: 20;
   opacity: 0;
-  transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.22,1.15,0.36,1);
+  transition: opacity 0.42s ease, transform 0.48s cubic-bezier(0.22,1.15,0.36,1);
   pointer-events: none;
-  overflow: hidden;
+  overflow: visible;
 }
-
-/* 顶部黄金光带 */
-.popup::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(255,210,60,0.0) 10%,
-    rgba(255,210,80,0.75) 35%,
-    rgba(255,230,100,0.95) 50%,
-    rgba(255,210,80,0.75) 65%,
-    rgba(255,210,60,0.0) 90%,
-    transparent 100%);
-  pointer-events: none;
-}
-
-/* 右上角琥珀光晕装饰 */
-.popup::after {
-  content: '';
-  position: absolute;
-  top: -50px; right: -50px;
-  width: 140px; height: 140px;
-  background: radial-gradient(circle at center,
-    rgba(255,180,0,0.1) 0%,
-    rgba(255,140,0,0.04) 45%,
-    transparent 70%);
-  pointer-events: none;
-}
-
-/* 左下角橙红色对称光晕 */
-.popup-corner-glow {
-  position: absolute;
-  bottom: -40px; left: -40px;
-  width: 110px; height: 110px;
-  background: radial-gradient(circle at center,
-    rgba(232,0,28,0.08) 0%,
-    rgba(255,80,0,0.04) 45%,
-    transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
 .popup.show {
   opacity: 1;
-  transform: translate(-50%, -44%) scale(1);
+  transform: translateX(-50%) translateY(0) scale(1);
   pointer-events: auto;
-  animation: popupEntrance 0.55s cubic-bezier(0.22,1.15,0.36,1) both;
+  animation: popupEntrance 0.48s cubic-bezier(0.22,1.15,0.36,1) both;
 }
+/* 旧的 ::before / ::after 光晕不再使用 */
+.popup::before, .popup::after { display: none; }
+.popup-corner-glow { display: none; }
+.popup-shimmer { display: none; }
 
-/* 扫光动效层 */
-.popup-shimmer {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border-radius: 22px;
-  pointer-events: none;
-  z-index: 1;
-}
-.popup-shimmer::after {
-  content: '';
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 60px;
-  background: linear-gradient(90deg, transparent, rgba(255,220,100,0.07), transparent);
-  animation: shimmerSweep 3.5s ease-in-out infinite;
-}
-
-/* 图标区 */
-.popup-icon-wrap {
+/* 顶部插图区（透明背景，展示遮罩层后的模糊页面） */
+.popup-illustration {
+  position: relative;
+  height: 94px;
   display: flex;
+  align-items: flex-end;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 14px;
-  position: relative;
-  z-index: 2;
+  padding-bottom: 0;
+  overflow: visible;
 }
-
-/* 盾牌容器扩大 */
-.shield-wrap { position:relative; width:52px; height:52px; overflow:visible; }
-
-/* 光晕环 - 更柔和的金色 */
-.shield-ring {
+.popup-illus-svg {
   position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle,
-    rgba(255,210,60,0.45) 0%,
-    rgba(255,160,0,0.12) 50%,
-    rgba(255,160,0,0.0) 70%);
-  animation: shieldRing 2.2s ease-out infinite;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
-.shield-ring:nth-child(1) { width:68px; height:68px; top:-8px; left:-8px; animation-delay:0s; }
-.shield-ring:nth-child(2) { width:86px; height:86px; top:-17px; left:-17px; animation-delay:0.7s; }
-.shield-ring:nth-child(3) { width:104px; height:104px; top:-26px; left:-26px; animation-delay:1.4s; }
-@keyframes shieldRing {
-  0%   { opacity:0.9; transform:scale(0.65); }
-  55%  { opacity:0.4; }
-  100% { opacity:0; transform:scale(1.18); }
-}
-
-/* 盾牌主体 - 更立体的渐变 */
-.shield-body {
+/* 被保人 chip，左下角 */
+.popup-insured-chip {
   position: absolute;
-  width: 52px; height: 52px;
-  border-radius: 50%;
-  background: conic-gradient(
-    from 135deg,
-    #FF8800 0deg,
-    #FFD000 90deg,
-    #FFEE80 150deg,
-    #FFD000 210deg,
-    #FF9500 360deg
-  );
-  display: flex; align-items: center; justify-content: center;
-  box-shadow:
-    0 0 0 2px rgba(255,215,80,0.2),
-    0 4px 24px rgba(255,175,0,0.65),
-    0 0 40px rgba(255,200,0,0.3),
-    inset 0 1px 2px rgba(255,255,200,0.5);
-  animation: shieldPulse 2.8s ease-in-out infinite;
-}
-@keyframes shieldPulse {
-  0%,100% {
-    box-shadow: 0 0 0 2px rgba(255,215,80,0.2), 0 4px 24px rgba(255,175,0,0.65), 0 0 40px rgba(255,200,0,0.3), inset 0 1px 2px rgba(255,255,200,0.5);
-  }
-  50% {
-    box-shadow: 0 0 0 3px rgba(255,215,80,0.3), 0 4px 32px rgba(255,185,0,0.85), 0 0 56px rgba(255,200,0,0.45), inset 0 1px 2px rgba(255,255,200,0.5);
-  }
-}
-.shield-svg { width:26px; height:26px; }
-
-/* 弹窗标题 */
-.popup-title {
-  text-align: center;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(240,245,255,0.92);
-  margin-bottom: 4px;
-  white-space: nowrap;
-  letter-spacing: 0.3px;
-  text-shadow: 0 1px 12px rgba(255,200,80,0.2), 0 0 30px rgba(255,150,0,0.1);
-  position: relative; z-index: 2;
-}
-
-/* 标题下方装饰分隔线 */
-.popup-title-sep {
-  position: relative;
-  z-index: 2;
+  bottom: 14px;
+  left: 0;
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.82);
+  letter-spacing: 0.2px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 3px;
+  padding-left: 2px;
+}
+.popup-insured-chip b { font-weight: 700; color: #fff; }
+.popup-insured-chevron { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 1px; }
+
+/* 白色卡片主体 */
+.popup-card {
+  background: #FFFFFF;
+  border-radius: 16px 16px 0 0;
+  padding: 16px 18px 14px;
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.12);
+  position: relative;
+}
+.popup-card-title {
+  font-size: 21px;
+  font-weight: 900;
+  color: #111111;
   margin-bottom: 14px;
-  padding: 0 4px;
+  letter-spacing: 0.5px;
 }
-.popup-title-sep::before,
-.popup-title-sep::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,200,60,0.22), transparent);
-}
-.popup-title-sep-dot {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: rgba(255,210,60,0.5);
-  box-shadow: 0 0 6px rgba(255,200,0,0.4);
+
+/* 锯齿底边 */
+.popup-scallop {
+  display: block;
+  width: 100%;
+  line-height: 0;
 }
 
 /* 权益列表 */
-.benefit-list { margin-bottom: 12px; position: relative; z-index: 2; }
+.benefit-list { margin-bottom: 10px; }
 
 .benefit-row {
   display: flex;
   align-items: center;
-  padding: 8px 10px 8px 0;
-  margin-bottom: 5px;
-
-  /* 卡片化背景 */
-  border-radius: 10px;
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(255,255,255,0.055);
-  border-left: 2px solid rgba(255,190,50,0.22);
-
+  padding: 9px 0;
+  border-bottom: 0.5px solid #F2F2F2;
   opacity: 0;
-  transform: translateX(-14px);
+  transform: translateX(-12px);
   transition:
-    opacity 0.42s ease,
-    transform 0.42s cubic-bezier(0.34,1.25,0.64,1),
-    border-left-color 0.35s ease,
-    background 0.35s ease,
-    box-shadow 0.35s ease;
+    opacity 0.38s ease,
+    transform 0.38s cubic-bezier(0.34,1.25,0.64,1);
 }
-.benefit-row:last-child { margin-bottom: 0; }
-.benefit-row.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-/* 激活态 - 金色左边框 + 微光背景 */
-.benefit-row.sweep {
-  border-left-color: rgba(255,210,0,0.7);
-  background: linear-gradient(90deg,
-    rgba(255,185,0,0.07) 0%,
-    rgba(255,255,255,0.02) 60%,
-    transparent 100%);
-  box-shadow: inset 2px 0 8px rgba(255,180,0,0.1);
-}
+.benefit-row:last-child { border-bottom: none; }
+.benefit-row.visible { opacity: 1; transform: translateX(0); }
+.benefit-row.sweep { }
 
-/* 图标 - 圆角方形，金色调 */
-.row-icon {
-  width: 28px; height: 28px;
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-  margin-left: 8px;
-  margin-right: 9px;
-  background: linear-gradient(145deg,
-    rgba(255,200,0,0.22) 0%,
-    rgba(255,130,0,0.10) 100%);
-  color: rgba(255,215,80,1);
-  border: 1px solid rgba(255,195,40,0.28);
-  box-shadow: inset 0 1px 0 rgba(255,240,100,0.12), 0 2px 6px rgba(255,150,0,0.08);
-}
+.row-icon { display: none; }
 
 .row-text { flex: 1; }
 .row-main {
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(230,238,255,0.88);
-  display: flex; align-items: flex-start;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: #333333;
+  display: flex; align-items: center;
   justify-content: space-between;
-  flex-wrap: nowrap; gap: 6px;
+  gap: 6px;
   line-height: 1.4;
 }
+.row-main > span b,
+.row-main > span strong { font-weight: 700; color: #111; }
 
-/* 已激活 badge - 精致胶囊 */
+/* 已激活 badge */
 .row-badge {
-  display: inline-flex; align-items: center; gap: 3px;
-  font-size: 9.5px; font-weight: 700;
-  color: rgba(0,230,140,0.9);
-  background: rgba(0,200,120,0.12);
-  border: 1px solid rgba(0,210,120,0.22);
+  display: inline-flex; align-items: center; gap: 2px;
+  font-size: 10px; font-weight: 600;
+  color: #555555;
   border-radius: 20px;
-  padding: 1px 6px 1px 3px;
+  padding: 1px 4px 1px 2px;
   opacity: 0; transform: scale(0.4);
   transition:
-    opacity 0.3s ease,
-    transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  white-space: nowrap; flex-shrink: 0; align-self: flex-start;
-  margin-top: 1px;
+    opacity 0.28s ease,
+    transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap; flex-shrink: 0;
 }
-.row-badge.show {
-  opacity: 1;
-  transform: scale(1);
-}
+.row-badge.show { opacity: 1; transform: scale(1); }
 .badge-check {
-  width: 12px; height: 12px;
+  width: 13px; height: 13px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #00E890, #00B060);
+  background: #52C41A;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 6px rgba(0,220,130,0.6), 0 0 2px rgba(0,180,100,0.5);
 }
-.badge-check svg { width: 7px; height: 7px; }
+.badge-check svg { width: 8px; height: 8px; }
 
-/* 进度条 - 超细霓虹金 */
-.progress-wrap { margin-bottom: 10px; position: relative; z-index: 2; }
+/* 进度条 - 细线灰色 */
+.progress-wrap { margin-bottom: 10px; }
 .progress-track {
-  height: 3px;
-  background: rgba(255,255,255,0.08);
+  height: 2px;
+  background: #EBEBEB;
   border-radius: 99px;
-  overflow: visible;
+  overflow: hidden;
   position: relative;
   margin-bottom: 10px;
 }
 .progress-fill {
   height: 100%;
   border-radius: 99px;
-  background: linear-gradient(90deg,
-    #FF9800 0%,
-    #FFD000 50%,
-    #FFE860 80%,
-    #FFFAAA 100%);
-  box-shadow:
-    0 0 0 1px rgba(255,220,0,0.4),
-    0 0 8px rgba(255,210,0,0.9),
-    0 0 16px rgba(255,185,0,0.5);
+  background: #888888;
   width: 0%;
   transition: width 0.4s ease;
   position: relative;
 }
-/* 进度尖端发光粒子 */
-.progress-fill::after {
-  content: '';
-  position: absolute;
-  right: -4px; top: 50%;
-  transform: translateY(-50%);
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: #FFEF80;
-  box-shadow:
-    0 0 10px rgba(255,240,80,1),
-    0 0 5px rgba(255,210,0,0.9),
-    0 0 2px rgba(255,255,200,0.8);
-  opacity: 1;
-  transition: opacity 0.1s;
+.progress-fill::after { display: none; }
+
+/* 底部状态文字 */
+.popup-status-text {
+  text-align: center;
+  font-size: 11.5px;
+  color: #AAAAAA;
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
 }
 
-/* 状态文字与箭头 */
-.arrow-bounce {
-  color: #FFA040;
-  display: inline-block;
-  animation: arrowBounce 0.75s ease-in-out infinite;
+/* 领取权益 按钮 */
+.popup-claim-btn {
+  width: 100%;
+  height: 46px;
+  background: #555555;
+  border-radius: 23px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: opacity 0.15s;
+  margin-bottom: 12px;
 }
-@keyframes arrowBounce {
-  0%,100% { transform:translateX(0); }
-  50%     { transform:translateX(5px); }
-}
+.popup-claim-btn:active { opacity: 0.8; }
 
 /* 放弃按钮 */
 .cancel-btn {
   text-align: center;
-  font-size: 10.5px;
-  color: rgba(180,190,220,0.45);
+  font-size: 11px;
+  color: #BBBBBB;
   cursor: pointer;
-  letter-spacing: 0.5px;
-  margin-top: 12px;
+  letter-spacing: 0.3px;
   display: block;
-  padding-bottom: 2px;
-  border-bottom: 1px solid rgba(180,190,220,0.18);
+  padding: 2px 0;
   width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  transition: color 0.2s, border-color 0.2s;
+  margin: 0 auto;
+  transition: color 0.2s;
 }
-.cancel-btn:hover {
-  color: rgba(220,225,240,0.7);
-  border-color: rgba(220,225,240,0.35);
+.cancel-btn:hover { color: #888888; }
+
+/* arrow-bounce (保留，但颜色调整后在白卡不使用) */
+@keyframes arrowBounce {
+  0%,100% { transform:translateX(0); }
+  50%     { transform:translateX(5px); }
+}
+.arrow-bounce {
+  display: inline-block;
+  animation: arrowBounce 0.75s ease-in-out infinite;
 }
 
 .pay-sheet {
@@ -1012,43 +822,13 @@ body {
   margin: 0 auto 10px;
 }
 
-/* ── 弹窗底部双按钮 ── */
-.popup-action-row {
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 14px;
-}
-.popup-action-row.show { display: flex; }
-.popup-btn-secondary {
-  width: 100%;
-  height: 40px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.22);
-  border-radius: 20px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 500;
-  color: rgba(200,210,240,0.65);
-  cursor: pointer;
-  transition: background 0.15s;
-  position: relative; z-index: 2;
-}
-.popup-btn-secondary:active { background: rgba(255,255,255,0.12); }
-.popup-btn-primary {
-  width: 100%;
-  height: 44px;
-  background: linear-gradient(90deg, #FFD000 0%, #FFBE00 100%);
-  border-radius: 22px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; font-weight: 800;
-  color: #1A1A1A;
-  cursor: pointer;
-  box-shadow: 0 4px 18px rgba(255,190,0,0.5);
-  letter-spacing: 0.5px;
-  transition: opacity 0.15s;
-  position: relative; z-index: 2;
-}
-.popup-btn-primary:active { opacity: 0.85; }
+/* popup-action-row: 新设计里不再直接使用，保留兼容 JS 引用 */
+.popup-action-row { display: none; }
+.popup-action-row.show { display: none; }
+.popup-btn-secondary { display: none; }
+.popup-btn-primary { display: none; }
+
+/* 完成态光晕（白卡里不显示）*/
 
 /* ── 被保人信息修改浮层 ── */
 .insured-sheet {
@@ -1326,99 +1106,130 @@ body {
 
   <!-- ═══ 激活弹窗 ═══ -->
   <div class="popup" id="popup">
-    <div class="success-overlay" id="successOverlay"></div>
-    <div class="popup-shimmer"></div>
-    <div class="popup-corner-glow"></div>
-    <div class="popup-icon-wrap">
-      <div class="shield-wrap">
-        <div class="shield-ring"></div>
-        <div class="shield-ring"></div>
-        <div class="shield-ring"></div>
-        <div class="shield-body">
-          <svg class="shield-svg" viewBox="0 0 40 40" fill="none">
-            <defs>
-              <linearGradient id="sg" x1="6" y1="4" x2="34" y2="38">
-                <stop offset="0%" stop-color="#FFD000"/>
-                <stop offset="60%" stop-color="#FFAA00"/>
-                <stop offset="100%" stop-color="#FF6600"/>
-              </linearGradient>
-              <linearGradient id="sg2" x1="10" y1="4" x2="30" y2="20">
-                <stop offset="0%" stop-color="#FFF0A0" stop-opacity="0.85"/>
-                <stop offset="100%" stop-color="#FFB800" stop-opacity="0"/>
-              </linearGradient>
-              <linearGradient id="ck" x1="13" y1="16" x2="27" y2="26">
-                <stop offset="0%" stop-color="#fff"/>
-                <stop offset="100%" stop-color="#ffe0a0"/>
-              </linearGradient>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="1.5" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-            <path d="M20 5.5L7 11v9.5c0 8.2 5.7 15.8 13 18C27.3 36.3 33 28.7 33 20.5V11L20 5.5z"
-              fill="rgba(0,0,0,0.25)" transform="translate(0.5,1.5)"/>
-            <path d="M20 5.5L7 11v9.5c0 8.2 5.7 15.8 13 18C27.3 36.3 33 28.7 33 20.5V11L20 5.5z"
-              fill="url(#sg)"/>
-            <path d="M20 5.5L7 11v9.5c0 8.2 5.7 15.8 13 18C27.3 36.3 33 28.7 33 20.5V11L20 5.5z"
-              fill="url(#sg2)"/>
-            <path d="M20 5.5L7 11v9.5c0 8.2 5.7 15.8 13 18C27.3 36.3 33 28.7 33 20.5V11L20 5.5z"
-              fill="none" stroke="rgba(255,220,120,0.5)" stroke-width="1"/>
-            <path d="M13.5 20.5l4.5 4.5 9-9"
-              stroke="url(#ck)" stroke-width="3"
-              stroke-linecap="round" stroke-linejoin="round"
-              filter="url(#glow)"
-              id="shieldCheck" opacity="0"/>
-          </svg>
-        </div>
+
+    <!-- 插图区（透明背景，浮在遮罩上方） -->
+    <div class="popup-illustration">
+      <!-- 装饰插图：手持盾牌 -->
+      <svg class="popup-illus-svg" width="220" height="94" viewBox="0 0 220 94" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 环形光晕 -->
+        <ellipse cx="110" cy="85" rx="72" ry="10" fill="rgba(255,255,255,0.07)"/>
+        <!-- 左侧机甲手套 -->
+        <g>
+          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30 C71 31 73 34 72 42 L71 50 C73 42 77 38 81 40 C85 42 85 50 83 58 L80 64 C82 56 86 54 90 56 C94 58 93 66 91 74 L88 84 L86 90Z" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" fill="none"/>
+          <!-- 指节线条 -->
+          <path d="M71 48 Q74 44 78 46" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+          <path d="M80 62 Q83 58 87 60" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- 右侧机甲手套（镜像） -->
+        <g transform="translate(220,0) scale(-1,1)">
+          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30 C71 31 73 34 72 42 L71 50 C73 42 77 38 81 40 C85 42 85 50 83 58 L80 64 C82 56 86 54 90 56 C94 58 93 66 91 74 L88 84 L86 90Z" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" fill="none"/>
+          <path d="M71 48 Q74 44 78 46" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+          <path d="M80 62 Q83 58 87 60" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- 中心盾牌 -->
+        <path d="M110 14 L88 24 V42 C88 58 97 72 110 78 C123 72 132 58 132 42 V24 Z" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+        <path d="M101 46 L108 53 L120 38" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <!-- 被保人 chip -->
+      <div class="popup-insured-chip">
+        <b>被保人 **然</b>
+        <span class="popup-insured-chevron">›</span>
       </div>
     </div>
-    <div class="popup-title" id="popupTitle">正在为被保人 <span style="color:#FFD000;font-weight:900;">*然</span> 领取专属保障权益</div>
-    <div class="popup-title-sep"><div class="popup-title-sep-dot"></div><div class="popup-title-sep-dot"></div><div class="popup-title-sep-dot"></div></div>
-    <div class="benefit-list">
-      <div class="benefit-row" id="row0">
-        <div class="row-icon">💰</div>
-        <div class="row-text">
-          <div class="row-main"><span><span style="color:#FFD000;font-weight:900;">1.68元</span>现金体验奖励已锁定</span><div class="row-badge" id="badge0"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div></div>
+
+    <!-- 白色卡片主体 -->
+    <div class="popup-card">
+      <div class="popup-card-title">保障权益领取中</div>
+
+      <div class="benefit-list">
+        <div class="benefit-row" id="row0">
+          <div class="row-text">
+            <div class="row-main">
+              <span>体验奖励<b>1.68元</b>余额</span>
+              <div class="row-badge" id="badge0"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div>
+            </div>
+          </div>
+        </div>
+        <div class="benefit-row" id="row1">
+          <div class="row-text">
+            <div class="row-main">
+              <span>30天保障<b>免费体验</b> 享无理由退</span>
+              <div class="row-badge" id="badge1"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div>
+            </div>
+          </div>
+        </div>
+        <div class="benefit-row" id="row2">
+          <div class="row-text">
+            <div class="row-main">
+              <span>30天后45元/月开启<b>全年保障</b></span>
+              <div class="row-badge" id="badge2"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div>
+            </div>
+          </div>
+        </div>
+        <div class="benefit-row" id="row3">
+          <div class="row-text">
+            <div class="row-main">
+              <span>付费保障32天未理赔可<b>全额退</b></span>
+              <div class="row-badge" id="badge3"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="benefit-row" id="row1">
-        <div class="row-icon">🎁</div>
-        <div class="row-text">
-          <div class="row-main"><span>30天保障<span style="color:#FFD000;font-weight:900;">免费体验</span>，享无理由退</span><div class="row-badge" id="badge1"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div></div>
+
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
         </div>
       </div>
-      <div class="benefit-row" id="row2">
-        <div class="row-icon">🏆</div>
-        <div class="row-text">
-          <div class="row-main"><span>30天后45元/月开启<span style="color:#FFD000;font-weight:900;">全年保障</span></span><div class="row-badge" id="badge2"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div></div>
-        </div>
-      </div>
-      <div class="benefit-row" id="row3">
-        <div class="row-icon">🔄</div>
-        <div class="row-text">
-          <div class="row-main"><span>付费保障开启即生效，32天未使用可全额退</span><div class="row-badge" id="badge3"><div class="badge-check"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2.5 2.5 3.5-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>已激活</div></div>
-        </div>
+
+      <div id="bottomArea">
+        <div id="statusText" class="popup-status-text">权益正在激活</div>
+        <!-- 完成后出现的「领取权益」按钮 -->
+        <div class="popup-claim-btn" id="confirmActivationBtn" style="display:none;" onclick="confirmActivation()">领取权益</div>
+        <!-- 兼容旧 JS 引用（隐藏） -->
+        <div id="popupActionRow" class="popup-action-row"></div>
+        <div id="disclaimerText" style="display:none;"></div>
+        <div class="cancel-btn" id="cancelBtnInCard" onclick="cancelActivation()">放弃保障权益</div>
       </div>
     </div>
-    <div class="progress-wrap">
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-    </div>
-    <div id="bottomArea" style="text-align:center;margin-top:10px;">
-      <div id="statusText" style="color:#fff;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:4px;">
-        <span class="arrow-bounce">→</span>
-        <span>即将验证身份领取保障权益</span>
-      </div>
-      <div id="disclaimerText" style="margin-top:8px;font-size:9.5px;color:rgba(180,190,215,0.55);line-height:1.65;text-align:left;padding:6px 8px;background:rgba(255,255,255,0.03);border-radius:7px;border:1px solid rgba(255,255,255,0.06);">
-        消费者权益保护服务提示：您已进入投保流程，本产品由众安在线保险股份有限公司承保，由美团保提供保险经纪服务，为了保障您的权益，我们将全程记录您的操作。查看<span style="color:rgba(100,170,255,0.7);">《客户告知书》</span>
-      </div>
-      <!-- 完成后显示的双操作按钮 -->
-      <div class="popup-action-row" id="popupActionRow">
-        <div class="popup-btn-primary" id="confirmActivationBtn" onclick="confirmActivation()">确认激活</div>
-        <div class="popup-btn-secondary" onclick="openInsuredSheet()">修改信息</div>
-      </div>
-    </div>
+
+    <!-- 锯齿底边 -->
+    <svg class="popup-scallop" width="335" height="12" viewBox="0 0 335 12" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <mask id="scallop-mask">
+          <rect width="335" height="12" fill="white"/>
+          <circle cx="8"   cy="0" r="6.5" fill="black"/>
+          <circle cx="24"  cy="0" r="6.5" fill="black"/>
+          <circle cx="40"  cy="0" r="6.5" fill="black"/>
+          <circle cx="56"  cy="0" r="6.5" fill="black"/>
+          <circle cx="72"  cy="0" r="6.5" fill="black"/>
+          <circle cx="88"  cy="0" r="6.5" fill="black"/>
+          <circle cx="104" cy="0" r="6.5" fill="black"/>
+          <circle cx="120" cy="0" r="6.5" fill="black"/>
+          <circle cx="136" cy="0" r="6.5" fill="black"/>
+          <circle cx="152" cy="0" r="6.5" fill="black"/>
+          <circle cx="168" cy="0" r="6.5" fill="black"/>
+          <circle cx="184" cy="0" r="6.5" fill="black"/>
+          <circle cx="200" cy="0" r="6.5" fill="black"/>
+          <circle cx="216" cy="0" r="6.5" fill="black"/>
+          <circle cx="232" cy="0" r="6.5" fill="black"/>
+          <circle cx="248" cy="0" r="6.5" fill="black"/>
+          <circle cx="264" cy="0" r="6.5" fill="black"/>
+          <circle cx="280" cy="0" r="6.5" fill="black"/>
+          <circle cx="296" cy="0" r="6.5" fill="black"/>
+          <circle cx="312" cy="0" r="6.5" fill="black"/>
+          <circle cx="328" cy="0" r="6.5" fill="black"/>
+        </mask>
+      </defs>
+      <rect width="335" height="12" fill="white" mask="url(#scallop-mask)"/>
+    </svg>
+
+    <!-- success-overlay: 保留节点供 JS 引用，新设计中不显示 -->
+    <div id="successOverlay" style="display:none;"></div>
+    <!-- shieldCheck: 保留供 JS 引用 -->
+    <path id="shieldCheck" style="display:none;"></path>
   </div>
 
   <!-- 放弃按钮（支付面板出现后） -->
@@ -1581,11 +1392,7 @@ body {
     const sheet = document.getElementById('disclosureSheet');
     sheet.classList.remove('show');
     setTimeout(() => {
-      const popup = document.getElementById('popup');
-      popup.classList.add('show');
-      // 立即展示「修改信息」，隐藏「确认激活」（等动画完成再显示）
-      document.getElementById('popupActionRow').classList.add('show');
-      document.getElementById('confirmActivationBtn').style.display = 'none';
+      document.getElementById('popup').classList.add('show');
       setTimeout(() => requestAnimationFrame(tick), 300);
     }, 400);
   }
@@ -1593,12 +1400,10 @@ body {
   function onComplete() {
     done = true;
     document.getElementById('progressFill').style.width = '100%';
-    document.getElementById('successOverlay').classList.add('show');
-    document.getElementById('popupTitle').style.color = '#fff';
-    document.getElementById('statusText').innerHTML = '<span style="color:#fff;font-weight:600;">所有权益已锁定</span>';
-    document.getElementById('disclaimerText').style.display = 'none';
+    document.getElementById('statusText').textContent = '权益激活完成';
+    document.getElementById('statusText').style.color = '#1A1A1A';
+    document.getElementById('statusText').style.fontWeight = '600';
     setTimeout(() => {
-      // popupActionRow 已在弹窗出现时显示，此处只需把「确认激活」补出来
       document.getElementById('confirmActivationBtn').style.display = '';
     }, 600);
   }
@@ -1718,7 +1523,7 @@ body {
     const mask  = document.getElementById('mask');
     popup.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
     popup.style.opacity = '0';
-    popup.style.transform = 'translate(-50%, -44%) scale(0.9)';
+    popup.style.transform = 'translateX(-50%) translateY(20px) scale(0.9)';
     mask.style.transition = 'background 0.25s ease';
     mask.style.background = 'rgba(0,0,0,0)';
     setTimeout(() => {
@@ -1729,7 +1534,6 @@ body {
       mask.removeAttribute('style');
       mask.classList.remove('dim-for-pay');
       document.getElementById('progressFill').style.width = '0%';
-      document.getElementById('successOverlay').classList.remove('show');
       for (let i=0;i<4;i++) {
         const el = document.getElementById('row'+i);
         if (el) { el.classList.remove('visible','sweep'); }
@@ -1737,18 +1541,17 @@ body {
         if (badge) badge.classList.remove('show');
         rowDone[i] = false; badgeDone[i] = false;
       }
-      const sc = document.getElementById('shieldCheck');
-      if (sc) sc.style.opacity = '0';
       shieldDone = false;
-      document.getElementById('popupTitle').removeAttribute('style');
       const statusEl = document.getElementById('statusText');
-      if (statusEl) statusEl.innerHTML = '<span class="arrow-bounce">→</span><span>即将验证身份领取保障权益</span>';
+      if (statusEl) {
+        statusEl.textContent = '权益正在激活';
+        statusEl.style.color = '';
+        statusEl.style.fontWeight = '';
+      }
       document.getElementById('abandonBtn').classList.remove('show');
       document.getElementById('paySheet').classList.remove('show');
       document.getElementById('insuredSheet').classList.remove('show');
       document.getElementById('confirmActivationBtn').style.display = 'none';
-      document.getElementById('popupActionRow').classList.remove('show');
-      document.getElementById('disclaimerText').style.display = '';
       selectRelation(0);
       resetPaySheet();
       document.getElementById('startBtn').style.pointerEvents = '';

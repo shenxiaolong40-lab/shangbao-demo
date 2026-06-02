@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 投保链路演示项目（shangbao-demo），模拟美团保×众安保险「住院保·百万医疗（免健告）」的完整投保交互链路。
 
-- GitHub: https://github.com/shenxiaolong40-lab/shangbao-demo（私有）
+- GitHub: https://github.com/shenxiaolong40-lab/shangbao-demo（公开）
 - 本地路径: `/Users/shenxiaolong/learning/shangbao`
 
 ## 技术栈
