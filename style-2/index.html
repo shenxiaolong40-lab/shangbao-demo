@@ -1348,8 +1348,8 @@ body {
     document.getElementById('pageContent').classList.add('blurred');
     document.getElementById('mask').classList.add('show');
     setTimeout(() => {
-      document.getElementById('disclosureSheet').classList.add('show');
-      startDisclosureCountdown();
+      document.getElementById('popup').classList.add('show');
+      setTimeout(() => requestAnimationFrame(tick), 300);
     }, 150);
   }
 
