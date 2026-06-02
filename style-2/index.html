@@ -1184,9 +1184,7 @@ body {
         <div id="popupActionRow" class="popup-action-row"></div>
         <div id="confirmActivationBtn" style="display:none;"></div>
         <div class="cancel-btn" id="cancelBtnInCard" onclick="cancelActivation()">放弃保障</div>
-        <div id="disclaimerText" class="disclaimer-text">
-          消费者权益保护服务提示：您已进入投保流程，本产品由众安在线财产保险股份有限公司承保，为保障您的权益，美团保将会全程记录您的操作，查看<span style="color:#1677FF;cursor:pointer;">客户告知书</span>
-        </div>
+        <div id="disclaimerText" style="display:none;"></div>
       </div>
     </div>
 
@@ -1352,8 +1350,8 @@ body {
     document.getElementById('pageContent').classList.add('blurred');
     document.getElementById('mask').classList.add('show');
     setTimeout(() => {
-      document.getElementById('popup').classList.add('show');
-      setTimeout(() => requestAnimationFrame(tick), 300);
+      document.getElementById('disclosureSheet').classList.add('show');
+      startDisclosureCountdown();
     }, 150);
   }
 
