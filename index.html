@@ -445,17 +445,17 @@ body {
    ══════════════════════════════════════ */
 
 @keyframes popupEntrance {
-  0%   { opacity:0; transform:translateX(-50%) translateY(28px) scale(0.94); }
+  0%   { opacity:0; transform:translate(-50%, calc(-50% + 28px)) scale(0.94); }
   60%  { opacity:1; }
-  100% { opacity:1; transform:translateX(-50%) translateY(0) scale(1); }
+  100% { opacity:1; transform:translate(-50%, -50%) scale(1); }
 }
 
 /* 弹窗外层容器 */
 .popup {
   position: absolute;
   left: 50%;
-  bottom: 78px;
-  transform: translateX(-50%) translateY(28px) scale(0.94);
+  top: 50%;
+  transform: translate(-50%, calc(-50% + 28px)) scale(0.94);
   width: 335px;
   background: transparent;
   border: none;
@@ -468,7 +468,7 @@ body {
 }
 .popup.show {
   opacity: 1;
-  transform: translateX(-50%) translateY(0) scale(1);
+  transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
   animation: popupEntrance 0.48s cubic-bezier(0.22,1.15,0.36,1) both;
 }
@@ -1523,7 +1523,7 @@ body {
     const mask  = document.getElementById('mask');
     popup.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
     popup.style.opacity = '0';
-    popup.style.transform = 'translateX(-50%) translateY(20px) scale(0.9)';
+    popup.style.transform = 'translate(-50%, calc(-50% + 20px)) scale(0.9)';
     mask.style.transition = 'background 0.25s ease';
     mask.style.background = 'rgba(0,0,0,0)';
     setTimeout(() => {
