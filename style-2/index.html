@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>住院保·百万医疗（免健告）</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+
+body {
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  background: linear-gradient(135deg, #1a0a2e 0%, #0d1a3a 50%, #0a2a1a 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ── 手机壳 ── */
+.phone {
+  width: 375px;
+  height: 780px;
+  background: #F5F5F5;
+  border-radius: 40px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.45), 0 4px 20px rgba(0,0,0,0.2);
+  border: 4px solid #FFFFFF;
+}
+
+/* ── 页面内容（可滚动） ── */
+.page-content {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #F5F5F5;
+  scrollbar-width: none;
+  filter: blur(0px);
+  transition: filter 0.3s ease;
+}
+.page-content::-webkit-scrollbar { display: none; }
+.page-content.blurred { filter: blur(2px); }
+
+/* ── 状态栏 ── */
+.status-bar {
+  background: #FFF9F2;
+  height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 22px;
+  flex-shrink: 0;
+}
+.status-time { font-size: 15px; font-weight: 700; color: #1A1A1A; }
+.status-icons { display: flex; align-items: center; gap: 5px; }
+.sig-bar { width: 14px; height: 10px; }
+.wifi-icon { width: 14px; height: 10px; }
+.bat-icon {
+  width: 22px; height: 11px;
+  border: 1.5px solid #1A1A1A;
+  border-radius: 2px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 1.5px;
+}
+.bat-icon::after {
+  content: '';
+  position: absolute;
+  right: -5px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 5px;
+  background: #1A1A1A;
+  border-radius: 0 1px 1px 0;
+}
+.bat-fill { flex: 1; background: #1A1A1A; border-radius: 1px; height: 100%; }
+
+/* ── 导航栏 ── */
+.nav-bar {
+  background: #FFFFFF;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 0.5px solid #EEEEEE;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.nav-back {
+  font-size: 22px;
+  color: #1A1A1A;
+  cursor: pointer;
+  width: 32px;
+  line-height: 1;
+  margin-top: -1px;
+}
+.nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+.nav-actions { display: flex; gap: 8px; width: 54px; justify-content: flex-end; }
+.nav-icon {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid #CCCCCC;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  color: #666;
+  cursor: pointer;
+}
+
+/* ── 英雄区 ── */
+.hero {
+  background: linear-gradient(110deg, #FFF9F2 30%, #FFE8C0 100%);
+  padding: 16px 16px 0;
+  position: relative;
+  overflow: hidden;
+  min-height: 195px;
+}
+.hero-photo-area {
+  position: absolute;
+  right: 0; top: 0;
+  width: 58%; height: 100%;
+  background:
+    radial-gradient(ellipse at 80% 45%, rgba(255,220,160,0.55) 0%, transparent 60%),
+    linear-gradient(135deg, transparent 0%, rgba(255,200,120,0.25) 100%);
+  overflow: hidden;
+}
+/* 人物剪影（用 CSS 渐变模拟温暖的家庭感） */
+.hero-photo-area::before {
+  content: '';
+  position: absolute;
+  right: 10px; bottom: 0;
+  width: 140px; height: 150px;
+  background: radial-gradient(ellipse at 50% 80%, rgba(255,180,100,0.18) 0%, transparent 70%);
+  border-radius: 50% 50% 0 0;
+}
+.hero-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+.brand-mt {
+  background: #FFD000;
+  color: #1A1A1A;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  letter-spacing: 0.2px;
+}
+.brand-mt-m {
+  width: 12px; height: 12px;
+  background: #1A1A1A;
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.brand-mt-m::after {
+  content: 'M';
+  color: #FFD000;
+  font-size: 8px;
+  font-weight: 900;
+  line-height: 1;
+}
+.brand-sep { color: #CCCCCC; font-size: 14px; font-weight: 300; }
+.brand-za {
+  font-size: 11px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.brand-za-logo {
+  width: 14px; height: 14px;
+  border-radius: 2px;
+  border: 1px solid #888;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 7px;
+  color: #555;
+  font-weight: 700;
+}
+.hero-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #1A1A1A;
+  line-height: 1.2;
+  margin-bottom: 6px;
+  position: relative;
+  z-index: 2;
+}
+.hero-subtitle {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── 美团精选 banner ── */
+.promo-banner {
+  background: linear-gradient(90deg, #FFF3E0 0%, #FFE8C8 100%);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 0.5px solid #FFD8A0;
+}
+.promo-badge {
+  background: linear-gradient(135deg, #FF9500 0%, #FF6600 100%);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 9px;
+  border-radius: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+.promo-text { font-size: 12px; color: #A04000; line-height: 1.4; }
+
+/* ── 通用卡片 ── */
+.card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  margin: 10px 12px;
+  padding: 16px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+}
+
+/* ── 主保障额度卡片 ── */
+.coverage-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.coverage-line { flex: 1; height: 0.5px; background: #E8E8E8; }
+.coverage-title-text { font-size: 13px; color: #888; white-space: nowrap; }
+
+.coverage-amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.coverage-currency { font-size: 22px; font-weight: 800; color: #E8001C; }
+.coverage-number {
+  font-size: 40px;
+  font-weight: 900;
+  color: #E8001C;
+  letter-spacing: -2px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.coverage-badge {
+  background: #E8001C;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 5px;
+  border-radius: 3px;
+  align-self: center;
+  line-height: 1.3;
+}
+.coverage-desc {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 14px;
+}
+.coverage-divider { height: 0.5px; background: #F0F0F0; margin: 0 -16px 14px; }
+
+/* ── 两列权益 ── */
+.benefit-cols { display: flex; align-items: flex-start; }
+.benefit-col { flex: 1; text-align: center; padding: 0 4px; }
+.benefit-col-sep {
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.plus-circle {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid #FFAAAA;
+  display: flex; align-items: center; justify-content: center;
+  color: #FF6666;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1;
+}
+.benefit-col-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin-bottom: 5px;
+}
+.benefit-col-desc { font-size: 11px; color: #999; line-height: 1.5; }
+
+/* ── 保障详情卡片 ── */
+.card-protection { padding-bottom: 0; }
+.protection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.protection-title { font-size: 16px; font-weight: 700; color: #1A1A1A; }
+.protection-more { font-size: 14px; color: #1677FF; }
+
+.protection-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 0.5px solid #F5F5F5;
+  font-size: 13px;
+}
+.protection-row:last-of-type { border-bottom: none; }
+.protection-name { color: #333; }
+.protection-amount { color: #999; }
+
+/* ── 免费体验 banner ── */
+.free-trial {
+  background: #FFF3F3;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  margin-bottom: 14px;
+}
+.free-icon {
+  background: #E8001C;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  width: 20px; height: 20px;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.free-text { font-size: 12px; color: #444; line-height: 1.5; }
+.free-text strong { color: #E8001C; font-weight: 700; }
+
+/* ── 底部协议 ── */
+.footer-links {
+  background: #FFFFFF;
+  padding: 12px 14px;
+  margin: 0 0 8px;
+}
+.footer-links p {
+  font-size: 11px;
+  color: #AAAAAA;
+  line-height: 1.9;
+}
+.footer-links a { color: #1677FF; text-decoration: none; }
+
+/* ── 底部间距 ── */
+.page-bottom { height: 90px; background: #F5F5F5; }
+
+/* ── 底部按钮（浮动） ── */
+.cta-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 86px;
+  background: linear-gradient(180deg, rgba(245,245,245,0) 0%, #F5F5F5 45%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px 16px;
+  z-index: 5;
+  pointer-events: none;
+}
+.next-btn {
+  width: 100%;
+  height: 52px;
+  background: linear-gradient(90deg, #FFD000 0%, #FFBE00 100%);
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1A1A1A;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255,190,0,0.45);
+  letter-spacing: 1.5px;
+  position: relative;
+  transition: opacity 0.2s;
+  pointer-events: auto;
+}
+.next-btn:active { opacity: 0.85; }
+.free-tag {
+  position: absolute;
+  top: -9px; right: 16px;
+  background: #E8001C;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 8px;
+  letter-spacing: 0.3px;
+}
+
+/* ==============================================
+   弹窗 / 支付面板
+   ============================================== */
+.mask {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0);
+  transition: background 0.4s ease;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 40px;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+.mask.show {
+  background: rgba(8,4,24,0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  pointer-events: auto;
+}
+
+/* ══════════════════════════════════════
+   激活弹窗 ── 白色卡片风格
+   ══════════════════════════════════════ */
+
+@keyframes popupEntrance {
+  0%   { opacity:0; transform:translate(-50%, calc(-50% + 28px)) scale(0.94); }
+  60%  { opacity:1; }
+  100% { opacity:1; transform:translate(-50%, -50%) scale(1); }
+}
+
+/* 弹窗外层容器 */
+.popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, calc(-50% + 28px)) scale(0.94);
+  width: 335px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.42s ease, transform 0.48s cubic-bezier(0.22,1.15,0.36,1);
+  pointer-events: none;
+  overflow: visible;
+}
+.popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+  animation: popupEntrance 0.48s cubic-bezier(0.22,1.15,0.36,1) both;
+}
+/* 旧的 ::before / ::after 光晕不再使用 */
+.popup::before, .popup::after { display: none; }
+.popup-corner-glow { display: none; }
+.popup-shimmer { display: none; }
+
+/* 顶部插图区（透明背景，展示遮罩层后的模糊页面） */
+.popup-illustration {
+  position: relative;
+  height: 94px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 0;
+  overflow: visible;
+}
+.popup-illus-svg {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+/* 被保人 chip，左下角 */
+.popup-insured-chip {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  font-size: 17px;
+  color: rgba(255,255,255,0.82);
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding-left: 2px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.popup-insured-chip:active { opacity: 0.7; }
+.popup-insured-chip b { font-weight: 700; color: #fff; }
+.popup-insured-chevron { font-size: 19px; color: rgba(255,255,255,0.6); margin-top: 1px; }
+
+/* 白色卡片主体 */
+.popup-card {
+  background: #FFFFFF;
+  border-radius: 16px 16px 0 0;
+  padding: 16px 18px 14px;
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.12);
+  position: relative;
+}
+.popup-card-title {
+  font-size: 21px;
+  font-weight: 900;
+  color: #111111;
+  margin-bottom: 14px;
+  letter-spacing: 0.5px;
+}
+
+/* 锯齿底边 */
+.popup-scallop {
+  display: block;
+  width: 100%;
+  line-height: 0;
+}
+
+/* 进度条 - 细线灰色 */
+.progress-wrap { margin-bottom: 10px; }
+.progress-track {
+  height: 2px;
+  background: #EBEBEB;
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 10px;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: #888888;
+  width: 0%;
+  transition: width 0.4s ease;
+  position: relative;
+}
+.progress-fill::after { display: none; }
+
+/* 底部状态文字 */
+.popup-status-text {
+  text-align: center;
+  font-size: 11.5px;
+  color: #AAAAAA;
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+
+/* 领取权益 按钮 */
+.popup-claim-btn {
+  width: 100%;
+  height: 46px;
+  background: #555555;
+  border-radius: 23px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: opacity 0.15s;
+  margin-bottom: 12px;
+}
+.popup-claim-btn:active { opacity: 0.8; }
+
+/* 放弃按钮 */
+.cancel-btn {
+  text-align: center;
+  font-size: 11px;
+  color: #BBBBBB;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  display: block;
+  padding: 2px 0;
+  width: fit-content;
+  margin: 0 auto;
+  transition: color 0.2s;
+}
+.cancel-btn:hover { color: #888888; }
+
+/* arrow-bounce (保留，但颜色调整后在白卡不使用) */
+@keyframes arrowBounce {
+  0%,100% { transform:translateX(0); }
+  50%     { transform:translateX(5px); }
+}
+.arrow-bounce {
+  display: inline-block;
+  animation: arrowBounce 0.75s ease-in-out infinite;
+}
+
+.pay-sheet {
+  position:absolute; bottom:0; left:0; right:0;
+  background:#fff; border-radius:20px 20px 0 0;
+  padding:20px 0 0;
+  box-shadow:0 -8px 32px rgba(0,0,0,0.22);
+  z-index:40;
+  transform:translateY(100%);
+  transition:transform 0.38s cubic-bezier(0.32,1.1,0.4,1);
+  pointer-events:none;
+}
+.pay-sheet.show { transform:translateY(0); pointer-events:auto; }
+.pay-sheet-title {
+  text-align:center; font-size:17px; font-weight:600; color:#111;
+  margin-bottom:20px; position:relative;
+}
+.pay-sheet-close { position:absolute; right:20px; top:0; font-size:20px; color:#999; cursor:pointer; }
+.pay-dots { display:flex; gap:10px; justify-content:center; margin:0 20px 10px; }
+.pay-dot {
+  flex:1; height:48px; background:#f5f5f5; border-radius:8px; border:1px solid #e8e8e8;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; color:transparent; transition:all 0.12s ease;
+}
+.pay-dot.filled { background:#f0f0f0; border-color:#BBBBBB; color:#1A1A1A; }
+
+/* 支付成功态 */
+.pay-success {
+  padding: 28px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: successIn 0.4s cubic-bezier(0.34,1.3,0.64,1) both;
+}
+@keyframes successIn {
+  from { opacity:0; transform:translateY(16px) scale(0.92); }
+  to   { opacity:1; transform:translateY(0)  scale(1); }
+}
+.pay-success-icon {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: linear-gradient(135deg, #00C878, #00A060);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 24px rgba(0,200,120,0.4);
+  font-size: 28px; color: #fff;
+}
+.pay-success-text {
+  font-size: 20px; font-weight: 800; color: #1A1A1A; letter-spacing: 1px;
+}
+.pay-success-sub { font-size: 12px; color: #999; }
+.pay-forget { text-align:right; padding:0 20px; font-size:13px; color:#1677FF; margin-bottom:10px; }
+.pay-keyboard {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:1px; background:#e0e0e0; border-top:1px solid #e0e0e0;
+}
+.pay-key {
+  background:#fff; height:54px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; color:#111;
+}
+.pay-key.empty,.pay-key.del { background:#f5f5f5; }
+.pay-key.del { font-size:16px; color:#555; }
+
+.popup.hide-for-pay { opacity:0; pointer-events:none; transition:opacity 0.25s ease; }
+.mask.dim-for-pay {
+  background:rgba(8,4,24,0.75);
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+}
+
+.abandon-btn {
+  position: absolute; bottom: 16px; left: 0; right: 0;
+  text-align: center; font-size: 10.5px;
+  color: rgba(150,155,175,0.35);
+  cursor: pointer; z-index: 41; pointer-events: none; opacity: 0;
+  letter-spacing: 0.4px;
+  transition: opacity 0.3s ease;
+}
+.abandon-btn.show { opacity: 1; pointer-events: auto; }
+
+/* 完成态 - 温暖金绿光晕 */
+.success-overlay {
+  position: absolute; inset: -20px; border-radius: 24px;
+  background: radial-gradient(
+    ellipse at 50% 35%,
+    rgba(0,230,130,0.14) 0%,
+    rgba(255,190,0,0.06) 40%,
+    transparent 70%);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.success-overlay.show { opacity: 1; }
+
+/* ══════════════════════════════════════
+   投保可回溯 下浮层
+   ══════════════════════════════════════ */
+.disclosure-sheet {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.18);
+  z-index: 30;
+  transform: translateY(100%);
+  transition: transform 0.38s cubic-bezier(0.32,1.1,0.4,1);
+  pointer-events: none;
+}
+.disclosure-sheet.show { transform: translateY(0); pointer-events: auto; }
+
+.disc-header {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 18px 20px 14px;
+}
+.disc-brand-mt {
+  background: #FFD000; color: #1A1A1A;
+  font-size: 12px; font-weight: 800;
+  padding: 3px 9px; border-radius: 5px;
+  display: flex; align-items: center; gap: 4px;
+}
+.disc-sep { color: #CCCCCC; font-size: 18px; font-weight: 300; }
+.disc-brand-za {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; color: #333; font-weight: 600;
+}
+.disc-za-logo {
+  display: flex; align-items: center;
+}
+.disc-divider { height: 0.5px; background: #EEEEEE; }
+.disc-content { padding: 18px 20px 0; }
+.disc-title {
+  font-size: 20px; font-weight: 800; color: #1A1A1A;
+  margin-bottom: 10px;
+}
+.disc-tags {
+  display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.disc-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11.5px; color: #444;
+  background: #F5F7FA; padding: 4px 9px; border-radius: 4px;
+}
+.disc-tag-icon {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1.5px solid #AAB8CC;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.disc-tag-icon svg { width: 8px; height: 8px; }
+.disc-body {
+  font-size: 13px; color: #444; line-height: 1.75; margin-bottom: 18px;
+}
+.disc-body a { color: #FF6200; text-decoration: none; }
+.disc-confirm-btn {
+  margin: 0 20px 14px; height: 50px;
+  background: linear-gradient(90deg, #FFD000 0%, #FFBE00 100%);
+  border-radius: 25px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 700; color: #1A1A1A;
+  cursor: pointer; letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgba(255,190,0,0.38);
+  transition: opacity 0.15s;
+}
+.disc-confirm-btn:active { opacity: 0.85; }
+.disc-indicator {
+  width: 120px; height: 4px; border-radius: 2px;
+  background: #1A1A1A; opacity: 0.12;
+  margin: 0 auto 10px;
+}
+
+/* popup-action-row: 新设计里不再直接使用，保留兼容 JS 引用 */
+.popup-action-row { display: none; }
+.popup-action-row.show { display: none; }
+.popup-btn-secondary { display: none; }
+.popup-btn-primary { display: none; }
+
+/* 完成态光晕（白卡里不显示）*/
+
+/* ── 被保人信息修改浮层 ── */
+.insured-sheet {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.22);
+  z-index: 50;
+  transform: translateY(100%);
+  transition: transform 0.38s cubic-bezier(0.32,1.1,0.4,1);
+  pointer-events: none;
+}
+.insured-sheet.show { transform: translateY(0); pointer-events: auto; }
+
+.insured-sheet-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 0.5px solid #EEEEEE;
+}
+.insured-sheet-title { font-size: 17px; font-weight: 700; color: #1A1A1A; }
+.insured-sheet-close {
+  font-size: 22px; color: #BBBBBB; cursor: pointer;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* 关系选择器 */
+.relation-tabs {
+  display: flex; gap: 8px;
+  padding: 14px 20px 0;
+}
+.relation-tab {
+  flex: 1; height: 38px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 500; color: #666;
+  background: #F5F5F5; border: 1.5px solid transparent;
+  cursor: pointer; transition: all 0.18s;
+}
+.relation-tab.active {
+  background: #FFF8E6; border-color: #FFD000;
+  color: #B07800; font-weight: 700;
+}
+
+/* 被保人信息卡片 */
+.insured-info-card {
+  margin: 14px 20px 0;
+  background: #F8F9FB;
+  border-radius: 12px;
+  padding: 2px 16px;
+  border: 1px solid #EEEEEE;
+}
+.insured-field {
+  display: flex; align-items: center;
+  padding: 12px 0;
+  border-bottom: 0.5px solid #F0F0F0;
+  font-size: 14px;
+}
+.insured-field:last-child { border-bottom: none; }
+.insured-field-label { color: #999; width: 68px; flex-shrink: 0; }
+.insured-field-value { flex: 1; color: #1A1A1A; font-weight: 500; }
+.insured-field-value.empty { color: #CCCCCC; font-weight: 400; }
+.insured-field-arrow { color: #CCCCCC; font-size: 16px; }
+
+.insured-hint {
+  margin: 10px 20px 0;
+  font-size: 11.5px; color: #999; line-height: 1.65;
+  padding: 8px 12px;
+  background: #FFFBEF;
+  border-radius: 7px;
+  border: 1px solid #FFE8A0;
+}
+.insured-hint span { color: #FF8800; }
+
+.insured-confirm-btn {
+  margin: 16px 20px;
+  height: 50px;
+  background: linear-gradient(90deg, #FFD000 0%, #FFBE00 100%);
+  border-radius: 25px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 700; color: #1A1A1A;
+  cursor: pointer; letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgba(255,190,0,0.38);
+  transition: opacity 0.15s;
+}
+.insured-confirm-btn:active { opacity: 0.85; }
+.insured-indicator {
+  width: 120px; height: 4px; border-radius: 2px;
+  background: #1A1A1A; opacity: 0.12;
+  margin: 0 auto 10px;
+}
+
+/* ── 样式2 专用：3列权益卡片 ── */
+.benefit-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.benefit-card {
+  background: #F6F6F6;
+  border-radius: 10px;
+  padding: 10px 6px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.38s ease, transform 0.38s cubic-bezier(0.34,1.25,0.64,1);
+}
+.benefit-card.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.card-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 3px;
+  line-height: 1.35;
+}
+.card-desc {
+  font-size: 10px;
+  color: #999;
+  flex: 1;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.card-badge-wrap { width: 100%; display: flex; justify-content: center; }
+.card-badge {
+  background: #555;
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.28s ease, transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
+}
+.card-badge.show { opacity: 1; transform: scale(1); }
+.disclaimer-text {
+  font-size: 10px;
+  color: #AAAAAA;
+  line-height: 1.65;
+  padding: 0 2px;
+  margin-top: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- ═══ 可滚动主内容 ═══ -->
+  <div class="page-content" id="pageContent">
+
+    <!-- 状态栏 -->
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <!-- 信号 -->
+        <svg viewBox="0 0 17 12" class="sig-bar" fill="#1A1A1A">
+          <rect x="0"  y="8" width="3" height="4" rx="0.5"/>
+          <rect x="4.5" y="5.5" width="3" height="6.5" rx="0.5"/>
+          <rect x="9" y="3" width="3" height="9" rx="0.5"/>
+          <rect x="13.5" y="0" width="3" height="12" rx="0.5"/>
+        </svg>
+        <!-- WiFi -->
+        <svg viewBox="0 0 16 12" class="wifi-icon" fill="none" stroke="#1A1A1A" stroke-width="1.5" stroke-linecap="round">
+          <path d="M1 4.2C4 1.4 12 1.4 15 4.2"/>
+          <path d="M3 6.5C5.2 4.4 10.8 4.4 13 6.5"/>
+          <path d="M5.5 8.7C6.7 7.7 9.3 7.7 10.5 8.7"/>
+          <circle cx="8" cy="11" r="1" fill="#1A1A1A" stroke="none"/>
+        </svg>
+        <!-- 电池 -->
+        <div class="bat-icon"><div class="bat-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+      <div class="nav-back">‹</div>
+      <div class="nav-title">住院保·百万医疗（免健告）</div>
+      <div class="nav-actions">
+        <div class="nav-icon">↗</div>
+        <div class="nav-icon">🎧</div>
+      </div>
+    </div>
+
+    <!-- 英雄区 -->
+    <div class="hero">
+      <div class="hero-photo-area"></div>
+      <div class="hero-brand">
+        <div class="brand-mt">
+          <div class="brand-mt-m"></div>
+          美团保
+        </div>
+        <span class="brand-sep">|</span>
+        <div class="brand-za">
+          <div class="brand-za-logo">众安</div>
+          众安保险
+        </div>
+      </div>
+      <div class="hero-title">家庭顶梁柱必备</div>
+      <div class="hero-subtitle">人人都应配置的补充医保</div>
+    </div>
+
+    <!-- 美团精选 -->
+    <div class="promo-banner">
+      <div class="promo-badge">美团精选</div>
+      <div class="promo-text">投保成功享30天免费体验 后续将收取保费</div>
+    </div>
+
+    <!-- 主保障额度卡片 -->
+    <div class="card">
+      <div class="coverage-title-row">
+        <div class="coverage-line"></div>
+        <div class="coverage-title-text">报销住院医疗费用</div>
+        <div class="coverage-line"></div>
+      </div>
+      <div class="coverage-amount-row">
+        <div class="coverage-currency">¥</div>
+        <div class="coverage-number">6,000,000</div>
+        <div class="coverage-badge">最<br>高</div>
+      </div>
+      <div class="coverage-desc">医保报完还能报，最高100%报销</div>
+      <div class="coverage-divider"></div>
+      <div class="benefit-cols">
+        <div class="benefit-col">
+          <div class="benefit-col-name">优质特效药</div>
+          <div class="benefit-col-desc">可报销120万/针<br>car-t</div>
+        </div>
+        <div class="benefit-col-sep">
+          <div class="plus-circle">+</div>
+        </div>
+        <div class="benefit-col">
+          <div class="benefit-col-name">外购药品及器械</div>
+          <div class="benefit-col-desc">原研药自费药<br>等也能报</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 保障详情卡片 -->
+    <div class="card card-protection">
+      <div class="protection-header">
+        <div class="protection-title">保障详情</div>
+        <div class="protection-more">更多</div>
+      </div>
+      <div class="protection-row">
+        <span class="protection-name">意外身故、残疾</span>
+        <span class="protection-amount">50万</span>
+      </div>
+      <div class="protection-row">
+        <span class="protection-name">美团单车及打车意外身故、伤残</span>
+        <span class="protection-amount">100万</span>
+      </div>
+      <div class="protection-row">
+        <span class="protection-name">美团定机票/火车票出行的身故、伤残</span>
+        <span class="protection-amount">100万</span>
+      </div>
+      <div class="protection-row">
+        <span class="protection-name">猝死</span>
+        <span class="protection-amount">20万</span>
+      </div>
+      <!-- 免费体验提示 -->
+      <div class="free-trial">
+        <div class="free-icon">免</div>
+        <div class="free-text">
+          <strong>免费体验30天，</strong>30天后升级为全年保障
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部协议链接 -->
+    <div class="footer-links">
+      <p>请阅读 <a href="#">投保须知</a> | <a href="#">保险条款</a> | <a href="#">特别约定</a> | <a href="#">特药清单</a> | <a href="#">免责说明</a> | <a href="#">服务协议</a> | <a href="#">客户告知书</a></p>
+    </div>
+
+    <div class="page-bottom"></div>
+  </div><!-- /page-content -->
+
+  <!-- ═══ 悬浮底部按钮 ═══ -->
+  <div class="cta-bottom">
+    <div class="next-btn" id="startBtn" onclick="startActivation()">
+      <span class="free-tag">30天免费</span>
+      开启保障
+    </div>
+  </div>
+
+  <!-- ═══ 遮罩 ═══ -->
+  <div class="mask" id="mask"></div>
+
+  <!-- ═══ 投保可回溯下浮层 ═══ -->
+  <div class="disclosure-sheet" id="disclosureSheet">
+    <div class="disc-header">
+      <div class="disc-brand-mt">
+        <div class="brand-mt-m"></div>
+        美团保
+      </div>
+      <span class="disc-sep">|</span>
+      <div class="disc-brand-za">
+        <div class="disc-za-logo">
+          <svg width="48" height="16" viewBox="0 0 48 16" fill="none">
+            <path d="M2 8 Q4 3 8 8 Q12 13 16 8 Q20 3 24 8" stroke="#00A0E9" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <text x="26" y="12" font-size="11" font-weight="600" fill="#333" font-family="-apple-system,PingFang SC,sans-serif">众安保险</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="disc-divider"></div>
+    <div class="disc-content">
+      <div class="disc-title">消费者权益保障服务</div>
+      <div class="disc-tags">
+        <span class="disc-tag">
+          <span class="disc-tag-icon"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#AAB8CC" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          可安心理赔
+        </span>
+        <span class="disc-tag">
+          <span class="disc-tag-icon"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#AAB8CC" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          操作可回溯
+        </span>
+        <span class="disc-tag">
+          <span class="disc-tag-icon"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#AAB8CC" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          服务有保障
+        </span>
+      </div>
+      <p class="disc-body">您即将进入投保流程，本产品由众安在线财产保险股份有限公司承保，由重庆金诚互诺保险经纪有限公司提供保险中介服务，点击查看 <a href="#">客户告知书</a></p>
+    </div>
+    <div class="disc-confirm-btn" id="discBtn" onclick="onDisclosureConfirm()">我知道了 (<span id="discCount">3</span>)</div>
+    <div class="disc-indicator"></div>
+  </div>
+
+  <!-- ═══ 激活弹窗 ═══ -->
+  <div class="popup" id="popup">
+
+    <!-- 插图区（透明背景，浮在遮罩上方） -->
+    <div class="popup-illustration">
+      <!-- 装饰插图：手持盾牌 -->
+      <svg class="popup-illus-svg" width="220" height="94" viewBox="0 0 220 94" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 环形光晕 -->
+        <ellipse cx="110" cy="85" rx="72" ry="10" fill="rgba(255,255,255,0.07)"/>
+        <!-- 左侧机甲手套 -->
+        <g>
+          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30 C71 31 73 34 72 42 L71 50 C73 42 77 38 81 40 C85 42 85 50 83 58 L80 64 C82 56 86 54 90 56 C94 58 93 66 91 74 L88 84 L86 90Z" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" fill="none"/>
+          <!-- 指节线条 -->
+          <path d="M71 48 Q74 44 78 46" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+          <path d="M80 62 Q83 58 87 60" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- 右侧机甲手套（镜像） -->
+        <g transform="translate(220,0) scale(-1,1)">
+          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30 C71 31 73 34 72 42 L71 50 C73 42 77 38 81 40 C85 42 85 50 83 58 L80 64 C82 56 86 54 90 56 C94 58 93 66 91 74 L88 84 L86 90Z" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" fill="none"/>
+          <path d="M71 48 Q74 44 78 46" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+          <path d="M80 62 Q83 58 87 60" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- 中心盾牌 -->
+        <path d="M110 14 L88 24 V42 C88 58 97 72 110 78 C123 72 132 58 132 42 V24 Z" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+        <path d="M101 46 L108 53 L120 38" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <!-- 被保人 chip -->
+      <div class="popup-insured-chip" onclick="openInsuredSheet()">
+        <b>被保人 **然</b>
+        <span class="popup-insured-chevron">›</span>
+      </div>
+    </div>
+
+    <!-- 白色卡片主体 -->
+    <div class="popup-card">
+      <div class="popup-card-title">保障权益领取中</div>
+
+      <!-- 3列权益卡片 -->
+      <div class="benefit-cards-grid">
+        <div class="benefit-card" id="card0">
+          <div class="card-name">1.68元余额</div>
+          <div class="card-desc">体验后立返</div>
+          <div class="card-badge-wrap"><div class="card-badge" id="cbadge0">已激活</div></div>
+        </div>
+        <div class="benefit-card" id="card1">
+          <div class="card-name">30天免费保障</div>
+          <div class="card-desc">体验后立返</div>
+          <div class="card-badge-wrap"><div class="card-badge" id="cbadge1">已激活</div></div>
+        </div>
+        <div class="benefit-card" id="card2">
+          <div class="card-name">未理赔全额退</div>
+          <div class="card-desc">30天后45元/月开启</div>
+          <div class="card-badge-wrap"><div class="card-badge" id="cbadge2">已激活</div></div>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div id="bottomArea">
+        <div id="statusText" class="popup-status-text">即将验证身份领权益</div>
+        <!-- 兼容JS引用 -->
+        <div id="popupActionRow" class="popup-action-row"></div>
+        <div id="confirmActivationBtn" style="display:none;"></div>
+        <div id="disclaimerText" class="disclaimer-text">
+          消费者权益保护服务提示：您已进入投保流程，本产品由众安在线财产保险股份有限公司承保，为保障您的权益，美团保将会全程记录您的操作，查看<span style="color:#1677FF;cursor:pointer;">客户告知书</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 锯齿底边 -->
+    <svg class="popup-scallop" width="335" height="12" viewBox="0 0 335 12" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <mask id="scallop-mask">
+          <rect width="335" height="12" fill="white"/>
+          <circle cx="8"   cy="0" r="6.5" fill="black"/>
+          <circle cx="24"  cy="0" r="6.5" fill="black"/>
+          <circle cx="40"  cy="0" r="6.5" fill="black"/>
+          <circle cx="56"  cy="0" r="6.5" fill="black"/>
+          <circle cx="72"  cy="0" r="6.5" fill="black"/>
+          <circle cx="88"  cy="0" r="6.5" fill="black"/>
+          <circle cx="104" cy="0" r="6.5" fill="black"/>
+          <circle cx="120" cy="0" r="6.5" fill="black"/>
+          <circle cx="136" cy="0" r="6.5" fill="black"/>
+          <circle cx="152" cy="0" r="6.5" fill="black"/>
+          <circle cx="168" cy="0" r="6.5" fill="black"/>
+          <circle cx="184" cy="0" r="6.5" fill="black"/>
+          <circle cx="200" cy="0" r="6.5" fill="black"/>
+          <circle cx="216" cy="0" r="6.5" fill="black"/>
+          <circle cx="232" cy="0" r="6.5" fill="black"/>
+          <circle cx="248" cy="0" r="6.5" fill="black"/>
+          <circle cx="264" cy="0" r="6.5" fill="black"/>
+          <circle cx="280" cy="0" r="6.5" fill="black"/>
+          <circle cx="296" cy="0" r="6.5" fill="black"/>
+          <circle cx="312" cy="0" r="6.5" fill="black"/>
+          <circle cx="328" cy="0" r="6.5" fill="black"/>
+        </mask>
+      </defs>
+      <rect width="335" height="12" fill="white" mask="url(#scallop-mask)"/>
+    </svg>
+
+    <!-- success-overlay: 保留节点供 JS 引用，新设计中不显示 -->
+    <div id="successOverlay" style="display:none;"></div>
+    <!-- shieldCheck: 保留供 JS 引用 -->
+    <path id="shieldCheck" style="display:none;"></path>
+  </div>
+
+  <!-- 放弃按钮（支付面板出现后） -->
+  <div class="abandon-btn" id="abandonBtn" onclick="cancelActivation()">放弃保障权益</div>
+
+  <!-- 支付密码面板 -->
+  <div class="pay-sheet" id="paySheet">
+    <div class="pay-sheet-title" id="paySheetTitle">请输入支付密码<span class="pay-sheet-close" onclick="closePaySheet()">×</span></div>
+    <div class="pay-dots" id="payDots">
+      <div class="pay-dot" id="pd0">●</div>
+      <div class="pay-dot" id="pd1">●</div>
+      <div class="pay-dot" id="pd2">●</div>
+      <div class="pay-dot" id="pd3">●</div>
+      <div class="pay-dot" id="pd4">●</div>
+      <div class="pay-dot" id="pd5">●</div>
+    </div>
+    <div id="payInputArea">
+      <div class="pay-forget">忘记密码</div>
+      <div class="pay-keyboard" id="payKeyboard">
+        <div class="pay-key" onclick="pressPayKey('1')">1</div>
+        <div class="pay-key" onclick="pressPayKey('2')">2</div>
+        <div class="pay-key" onclick="pressPayKey('3')">3</div>
+        <div class="pay-key" onclick="pressPayKey('4')">4</div>
+        <div class="pay-key" onclick="pressPayKey('5')">5</div>
+        <div class="pay-key" onclick="pressPayKey('6')">6</div>
+        <div class="pay-key" onclick="pressPayKey('7')">7</div>
+        <div class="pay-key" onclick="pressPayKey('8')">8</div>
+        <div class="pay-key" onclick="pressPayKey('9')">9</div>
+        <div class="pay-key empty"></div>
+        <div class="pay-key" onclick="pressPayKey('0')">0</div>
+        <div class="pay-key del" onclick="delPayKey()">⌫</div>
+      </div>
+    </div>
+    <!-- 成功态 -->
+    <div class="pay-success" id="paySuccess" style="display:none;">
+      <div class="pay-success-icon">✓</div>
+      <div class="pay-success-text">保障已激活</div>
+      <div class="pay-success-sub">您的保障权益已成功开启</div>
+    </div>
+  </div>
+
+  <!-- ═══ 被保人信息修改浮层 ═══ -->
+  <div class="insured-sheet" id="insuredSheet">
+    <div class="insured-sheet-header">
+      <div class="insured-sheet-title">修改被保人信息</div>
+      <div class="insured-sheet-close" onclick="closeInsuredSheet()">×</div>
+    </div>
+
+    <!-- 关系选择 -->
+    <div class="relation-tabs">
+      <div class="relation-tab active" id="rel0" onclick="selectRelation(0)">本人</div>
+      <div class="relation-tab" id="rel1" onclick="selectRelation(1)">配偶</div>
+      <div class="relation-tab" id="rel2" onclick="selectRelation(2)">父母</div>
+      <div class="relation-tab" id="rel3" onclick="selectRelation(3)">子女</div>
+    </div>
+
+    <!-- 被保人信息卡片 -->
+    <div class="insured-info-card" id="insuredInfoCard">
+      <div class="insured-field">
+        <span class="insured-field-label">姓名</span>
+        <span class="insured-field-value" id="insuredName">张*然</span>
+        <span class="insured-field-arrow">›</span>
+      </div>
+      <div class="insured-field">
+        <span class="insured-field-label">证件类型</span>
+        <span class="insured-field-value" id="insuredIdType">居民身份证</span>
+        <span class="insured-field-arrow">›</span>
+      </div>
+      <div class="insured-field">
+        <span class="insured-field-label">证件号码</span>
+        <span class="insured-field-value" id="insuredIdNum">3101**********5678</span>
+        <span class="insured-field-arrow">›</span>
+      </div>
+      <div class="insured-field">
+        <span class="insured-field-label">手机号码</span>
+        <span class="insured-field-value" id="insuredPhone">150****5678</span>
+        <span class="insured-field-arrow">›</span>
+      </div>
+    </div>
+
+    <div class="insured-hint" id="insuredHint">
+      当前为本人投保，保障权益将与您的账户直接绑定。<span>切换被保人后需重新填写信息。</span>
+    </div>
+
+    <div class="insured-confirm-btn" onclick="closeInsuredSheet()">确认</div>
+    <div class="insured-indicator"></div>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+  const TOTAL_MS = 6000;
+  let startTime = null, rafId = null, cdInterval = null, done = false;
+  const cardAt      = [400, 1800, 3300];
+  const cardBadgeAt = [1100, 2500, 4700];
+  const cardDone    = [false, false, false];
+  const cardBadgeDone = [false, false, false];
+
+  function tick(ts) {
+    if (!startTime) startTime = ts;
+    const elapsed = ts - startTime;
+    document.getElementById('progressFill').style.width = Math.min(elapsed/TOTAL_MS*100,100)+'%';
+    cardAt.forEach((t,i) => {
+      if (!cardDone[i] && elapsed >= t) {
+        cardDone[i] = true;
+        document.getElementById('card'+i).classList.add('show');
+      }
+    });
+    cardBadgeAt.forEach((t,i) => {
+      if (!cardBadgeDone[i] && elapsed >= t) {
+        cardBadgeDone[i] = true;
+        document.getElementById('cbadge'+i).classList.add('show');
+      }
+    });
+    if (elapsed < TOTAL_MS && !done) { rafId = requestAnimationFrame(tick); }
+    else if (!done) { onComplete(); }
+  }
+
+  /* ── 投保可回溯下浮层 ── */
+  let discCountdown = 3;
+  let discTimer = null;
+
+  function startActivation() {
+    document.getElementById('startBtn').style.pointerEvents = 'none';
+    document.getElementById('pageContent').classList.add('blurred');
+    document.getElementById('mask').classList.add('show');
+    setTimeout(() => {
+      document.getElementById('disclosureSheet').classList.add('show');
+      startDisclosureCountdown();
+    }, 150);
+  }
+
+  function startDisclosureCountdown() {
+    discCountdown = 3;
+    document.getElementById('discCount').textContent = discCountdown;
+    discTimer = setInterval(() => {
+      discCountdown--;
+      if (discCountdown <= 0) {
+        clearInterval(discTimer);
+        discTimer = null;
+        onDisclosureConfirm();
+      } else {
+        document.getElementById('discCount').textContent = discCountdown;
+      }
+    }, 1000);
+  }
+
+  function onDisclosureConfirm() {
+    clearInterval(discTimer);
+    discTimer = null;
+    const sheet = document.getElementById('disclosureSheet');
+    sheet.classList.remove('show');
+    setTimeout(() => {
+      document.getElementById('popup').classList.add('show');
+      setTimeout(() => requestAnimationFrame(tick), 300);
+    }, 400);
+  }
+
+  function onComplete() {
+    done = true;
+    document.getElementById('progressFill').style.width = '100%';
+    const statusEl = document.getElementById('statusText');
+    if (statusEl) {
+      statusEl.textContent = '即将验证身份领权益';
+      statusEl.style.color = '#1A1A1A';
+      statusEl.style.fontWeight = '600';
+    }
+    // 自动拉起支付，无需确认按钮
+    setTimeout(confirmActivation, 1200);
+  }
+
+  function confirmActivation() {
+    document.getElementById('popup').classList.add('hide-for-pay');
+    document.getElementById('mask').classList.add('dim-for-pay');
+    document.getElementById('paySheet').classList.add('show');
+    document.getElementById('abandonBtn').classList.add('show');
+  }
+
+  /* ── 被保人信息修改浮层 ── */
+  const RELATION_DATA = [
+    {
+      name: '张*然', idType: '居民身份证', idNum: '3101**********5678', phone: '150****5678',
+      hint: '当前为<b>本人</b>投保，保障权益将与您的账户直接绑定。切换被保人后需重新填写信息。'
+    },
+    {
+      name: '', idType: '居民身份证', idNum: '', phone: '',
+      hint: '为<b>配偶</b>投保，需依法登记结婚，请确保姓名与证件信息一致。'
+    },
+    {
+      name: '', idType: '居民身份证', idNum: '', phone: '',
+      hint: '为<b>父母</b>投保，支持父亲或母亲，年龄须在18～65周岁之间。'
+    },
+    {
+      name: '', idType: '居民身份证', idNum: '', phone: '',
+      hint: '为<b>子女</b>投保，年龄需在30天～18周岁之间，超出年龄范围将无法承保。'
+    }
+  ];
+  let currentRelation = 0;
+
+  function openInsuredSheet() {
+    document.getElementById('popup').classList.add('hide-for-pay');
+    document.getElementById('insuredSheet').classList.add('show');
+  }
+
+  function closeInsuredSheet() {
+    document.getElementById('insuredSheet').classList.remove('show');
+    document.getElementById('popup').classList.remove('hide-for-pay');
+  }
+
+  function selectRelation(idx) {
+    currentRelation = idx;
+    for (let i = 0; i < 4; i++) {
+      document.getElementById('rel' + i).classList.toggle('active', i === idx);
+    }
+    const d = RELATION_DATA[idx];
+    const setVal = (id, val, placeholder) => {
+      const el = document.getElementById(id);
+      if (val) { el.textContent = val; el.classList.remove('empty'); }
+      else { el.textContent = placeholder; el.classList.add('empty'); }
+    };
+    setVal('insuredName',   d.name,   '请填写姓名');
+    setVal('insuredIdType', d.idType, '居民身份证');
+    setVal('insuredIdNum',  d.idNum,  '请填写证件号码');
+    setVal('insuredPhone',  d.phone,  '请填写手机号码');
+    document.getElementById('insuredHint').innerHTML = d.hint;
+  }
+
+  /* ── 支付密码交互 ── */
+  let payInput = [];
+
+  function pressPayKey(num) {
+    if (payInput.length >= 6) return;
+    payInput.push(num);
+    updatePayDots();
+    if (payInput.length === 6) {
+      setTimeout(showPaySuccess, 180);
+    }
+  }
+
+  function delPayKey() {
+    if (payInput.length === 0) return;
+    payInput.pop();
+    updatePayDots();
+  }
+
+  function updatePayDots() {
+    for (let i = 0; i < 6; i++) {
+      const dot = document.getElementById('pd' + i);
+      if (i < payInput.length) {
+        dot.classList.add('filled');
+      } else {
+        dot.classList.remove('filled');
+      }
+    }
+  }
+
+  function showPaySuccess() {
+    document.getElementById('payInputArea').style.display = 'none';
+    document.getElementById('paySheetTitle').style.display = 'none';
+    document.getElementById('paySuccess').style.display = 'flex';
+  }
+
+  function closePaySheet() {
+    document.getElementById('paySheet').classList.remove('show');
+    // 延迟重置，等收起动画完成
+    setTimeout(resetPaySheet, 400);
+  }
+
+  function resetPaySheet() {
+    payInput = [];
+    updatePayDots();
+    document.getElementById('payInputArea').style.display = '';
+    document.getElementById('paySheetTitle').style.display = '';
+    document.getElementById('paySuccess').style.display = 'none';
+  }
+
+  function cancelActivation() {
+    if (done) return;
+    clearInterval(discTimer); discTimer = null;
+    document.getElementById('disclosureSheet').classList.remove('show');
+    cancelAnimationFrame(rafId);
+    clearInterval(cdInterval);
+    const popup = document.getElementById('popup');
+    const mask  = document.getElementById('mask');
+    popup.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+    popup.style.opacity = '0';
+    popup.style.transform = 'translate(-50%, calc(-50% + 20px)) scale(0.9)';
+    mask.style.transition = 'background 0.25s ease';
+    mask.style.background = 'rgba(0,0,0,0)';
+    setTimeout(() => {
+      mask.classList.remove('show');
+      document.getElementById('pageContent').classList.remove('blurred');
+      popup.removeAttribute('style');
+      popup.classList.remove('show','hide-for-pay');
+      mask.removeAttribute('style');
+      mask.classList.remove('dim-for-pay');
+      document.getElementById('progressFill').style.width = '0%';
+      for (let i = 0; i < 3; i++) {
+        const card = document.getElementById('card'+i);
+        if (card) card.classList.remove('show');
+        const badge = document.getElementById('cbadge'+i);
+        if (badge) badge.classList.remove('show');
+        cardDone[i] = false; cardBadgeDone[i] = false;
+      }
+      const statusEl = document.getElementById('statusText');
+      if (statusEl) {
+        statusEl.textContent = '即将验证身份领权益';
+        statusEl.style.color = '';
+        statusEl.style.fontWeight = '';
+      }
+      document.getElementById('abandonBtn').classList.remove('show');
+      document.getElementById('paySheet').classList.remove('show');
+      document.getElementById('insuredSheet').classList.remove('show');
+      document.getElementById('confirmActivationBtn').style.display = 'none';
+      selectRelation(0);
+      resetPaySheet();
+      document.getElementById('startBtn').style.pointerEvents = '';
+      done=false; startTime=null; rafId=null; cdInterval=null;
+    }, 260);
+  }
+</script>
+</body>
+</html>
