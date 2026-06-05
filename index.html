@@ -1379,13 +1379,14 @@ body {
   let discCountdown = 3;
   let discTimer = null;
 
+  /* 点击投保按钮：弹出可回溯浮层 + 遮罩 */
   function startActivation() {
     document.getElementById('startBtn').style.pointerEvents = 'none';
     document.getElementById('pageContent').classList.add('blurred');
     document.getElementById('mask').classList.add('show');
     setTimeout(() => {
-      document.getElementById('popup').classList.add('show');
-      setTimeout(() => requestAnimationFrame(tick), 300);
+      document.getElementById('disclosureSheet').classList.add('show');
+      startDisclosureCountdown();
     }, 150);
   }
 
@@ -1404,17 +1405,18 @@ body {
     }, 1000);
   }
 
+  /* 浮层消失后自动弹出激活弹窗 */
   function onDisclosureConfirm() {
     clearInterval(discTimer);
     discTimer = null;
-    const sheet = document.getElementById('disclosureSheet');
-    sheet.classList.remove('show');
+    document.getElementById('disclosureSheet').classList.remove('show');
     setTimeout(() => {
       document.getElementById('popup').classList.add('show');
       setTimeout(() => requestAnimationFrame(tick), 300);
     }, 400);
   }
 
+  /* 动画完成：显示「确认激活」按钮，需手动点击才跳支付 */
   function onComplete() {
     done = true;
     document.getElementById('progressFill').style.width = '100%';
@@ -1426,6 +1428,7 @@ body {
     }, 600);
   }
 
+  /* 手动点击「确认激活」才跳转支付 */
   function confirmActivation() {
     document.getElementById('popup').classList.add('hide-for-pay');
     document.getElementById('mask').classList.add('dim-for-pay');
