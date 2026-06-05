@@ -1365,9 +1365,8 @@ body {
     clearInterval(discTimer);
     discTimer = null;
     disclosureDone = true;
-    const sheet = document.getElementById('disclosureSheet');
-    sheet.classList.remove('show');
-    // 浮层收起后仅回到正常页面，不触发激活
+    document.getElementById('disclosureSheet').classList.remove('show');
+    document.getElementById('mask').classList.remove('show');
   }
 
   /* ── 点击「开启保障」按钮触发激活弹窗 ── */
@@ -1403,6 +1402,7 @@ body {
   /* ── 页面加载后自动弹出可回溯浮层 ── */
   window.addEventListener('load', () => {
     setTimeout(() => {
+      document.getElementById('mask').classList.add('show');
       document.getElementById('disclosureSheet').classList.add('show');
       startDisclosureCountdown();
     }, 600);
