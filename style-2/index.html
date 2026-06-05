@@ -374,51 +374,9 @@ body {
 .footer-links a { color: #1677FF; text-decoration: none; }
 
 /* ── 底部间距 ── */
-.page-bottom { height: 90px; background: #F5F5F5; }
+.page-bottom { height: 20px; background: #F5F5F5; }
 
-/* ── 底部按钮（浮动） ── */
-.cta-bottom {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 86px;
-  background: linear-gradient(180deg, rgba(245,245,245,0) 0%, #F5F5F5 45%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 16px 16px;
-  z-index: 5;
-  pointer-events: none;
-}
-.next-btn {
-  width: 100%;
-  height: 52px;
-  background: linear-gradient(90deg, #FFD000 0%, #FFBE00 100%);
-  border-radius: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 800;
-  color: #1A1A1A;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(255,190,0,0.45);
-  letter-spacing: 1.5px;
-  position: relative;
-  transition: opacity 0.2s;
-  pointer-events: auto;
-}
-.next-btn:active { opacity: 0.85; }
-.free-tag {
-  position: absolute;
-  top: -9px; right: 16px;
-  background: #E8001C;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2px 9px;
-  border-radius: 8px;
-  letter-spacing: 0.3px;
-}
+/* ── 底部按钮（已移除，按钮内嵌在页面中） ── */
 
 /* ==============================================
    弹窗 / 支付面板
@@ -868,6 +826,89 @@ body {
   margin: 0 auto 10px;
 }
 
+/* ── 新页面结构样式 ── */
+.perk-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 16px 0;
+}
+.perk-row-gift { padding-top: 8px; }
+.perk-dot {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #fff;
+  flex-shrink: 0; margin-top: 1px;
+}
+.perk-dot-red { background: #E8001C; }
+.perk-dot-orange { background: #FF6600; }
+.perk-title { font-size: 15px; font-weight: 700; color: #1A1A1A; line-height: 1.4; }
+.perk-sub { font-size: 12px; color: #888; margin-top: 2px; }
+
+.stat-row {
+  display: flex; align-items: center;
+  padding: 10px 16px 0;
+  gap: 0;
+}
+.stat-item { flex: 1; text-align: center; }
+.stat-num { font-size: 20px; font-weight: 900; color: #1A1A1A; line-height: 1.2; }
+.stat-num-sm { font-size: 14px; font-weight: 900; color: #1A1A1A; line-height: 1.4; }
+.stat-label { font-size: 11px; color: #888; margin-top: 2px; }
+.stat-divider { width: 0.5px; height: 32px; background: #E8E8E8; flex-shrink: 0; }
+
+.reward-row {
+  display: flex; align-items: baseline;
+  padding: 4px 16px 0;
+}
+.reward-num { font-size: 38px; font-weight: 900; color: #E8001C; line-height: 1; }
+.reward-unit { font-size: 16px; font-weight: 700; color: #E8001C; margin-left: 4px; }
+
+.cta-inline {
+  padding: 14px 16px 0;
+}
+.cta-inline-btn {
+  width: 100%; height: 52px;
+  background: linear-gradient(90deg, #FFD000 0%, #FFBE00 100%);
+  border-radius: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800; color: #1A1A1A;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255,190,0,0.45);
+  letter-spacing: 2px;
+  position: relative;
+  transition: opacity 0.2s;
+}
+.cta-inline-btn:active { opacity: 0.85; }
+.cta-inline-tag {
+  position: absolute;
+  top: -10px; right: 16px;
+  background: #E8001C;
+  color: #fff;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 8px;
+  letter-spacing: 0.5px;
+}
+.cta-hint {
+  text-align: center;
+  font-size: 11px; color: #AAAAAA;
+  padding: 6px 16px 0;
+}
+.cta-hint a { color: #AAAAAA; text-decoration: none; }
+
+.timeline-row {
+  display: flex; align-items: center;
+  padding: 14px 16px 0;
+}
+.tl-item { flex: 1; text-align: center; }
+.tl-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #FFD000;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #1A1A1A;
+  margin-bottom: 4px;
+}
+.tl-label { font-size: 11px; font-weight: 600; color: #333; line-height: 1.4; }
+.tl-date { font-size: 10px; color: #AAAAAA; margin-top: 2px; }
+.tl-line { flex: 1; height: 0.5px; background: #E8E8E8; margin-bottom: 20px; }
+
 /* ── 样式2 专用：3列权益卡片 ── */
 .benefit-cards-grid {
   display: grid;
@@ -985,42 +1026,77 @@ body {
           众安保险
         </div>
       </div>
-      <div class="hero-title">家庭顶梁柱必备</div>
-      <div class="hero-subtitle">人人都应配置的补充医保</div>
+      <div class="hero-title">2026年补充医疗保障</div>
+      <div class="hero-subtitle">全网不怕比 | 1元起报销 | 三高结节可投</div>
     </div>
 
-    <!-- 美团精选 -->
-    <div class="promo-banner">
-      <div class="promo-badge">美团精选</div>
-      <div class="promo-text">投保成功享30天免费体验 后续将收取保费</div>
+    <!-- 享：30天免费体验 -->
+    <div class="perk-row">
+      <div class="perk-dot perk-dot-red">享</div>
+      <div class="perk-main">
+        <div class="perk-title">30天免费体验，不用健康告知</div>
+        <div class="perk-sub">体验期覆盖意外医疗，次月保障全面升级</div>
+      </div>
     </div>
 
-    <!-- 主保障额度卡片 -->
-    <div class="card">
-      <div class="coverage-title-row">
-        <div class="coverage-line"></div>
-        <div class="coverage-title-text">报销住院医疗费用</div>
-        <div class="coverage-line"></div>
+    <!-- 三列数字 -->
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">600万</div>
+        <div class="stat-label">住院报销额度</div>
       </div>
-      <div class="coverage-amount-row">
-        <div class="coverage-currency">¥</div>
-        <div class="coverage-number">6,000,000</div>
-        <div class="coverage-badge">最<br>高</div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">300万</div>
+        <div class="stat-label">院外特药费用</div>
       </div>
-      <div class="coverage-desc">医保报完还能报，最高100%报销</div>
-      <div class="coverage-divider"></div>
-      <div class="benefit-cols">
-        <div class="benefit-col">
-          <div class="benefit-col-name">优质特效药</div>
-          <div class="benefit-col-desc">可报销120万/针<br>car-t</div>
-        </div>
-        <div class="benefit-col-sep">
-          <div class="plus-circle">+</div>
-        </div>
-        <div class="benefit-col">
-          <div class="benefit-col-name">外购药品及器械</div>
-          <div class="benefit-col-desc">原研药自费药<br>等也能报</div>
-        </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num stat-num-sm">就医绿色通道</div>
+        <div class="stat-label">含住院垫付</div>
+      </div>
+    </div>
+
+    <!-- 赠：限时权益 -->
+    <div class="perk-row perk-row-gift">
+      <div class="perk-dot perk-dot-orange">赠</div>
+      <div class="perk-main">
+        <div class="perk-title">体验立得限时权益</div>
+      </div>
+    </div>
+
+    <!-- 1.68元大字 -->
+    <div class="reward-row">
+      <span class="reward-num">1.68</span><span class="reward-unit">元美团余额</span>
+    </div>
+
+    <!-- 立即体验 按钮（页面中间） -->
+    <div class="cta-inline">
+      <div class="cta-inline-btn" id="startBtn" onclick="startActivation()">
+        <span class="cta-inline-tag">仅限今日</span>
+        立即体验
+      </div>
+    </div>
+    <div class="cta-hint">*月付权益投保学知识可领 | <a href="#">规则说明</a> ›</div>
+
+    <!-- 三步时间轴 -->
+    <div class="timeline-row">
+      <div class="tl-item">
+        <div class="tl-num">1</div>
+        <div class="tl-label">免费体验30天</div>
+        <div class="tl-date">2026-04-10</div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-item">
+        <div class="tl-num">2</div>
+        <div class="tl-label">保障升级35元/月</div>
+        <div class="tl-date">2026-05-10</div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-item">
+        <div class="tl-num">3</div>
+        <div class="tl-label">保险止期</div>
+        <div class="tl-date">2027-06-09</div>
       </div>
     </div>
 
@@ -1031,27 +1107,24 @@ body {
         <div class="protection-more">更多</div>
       </div>
       <div class="protection-row">
-        <span class="protection-name">意外身故、残疾</span>
-        <span class="protection-amount">50万</span>
+        <span class="protection-name">住院医疗费用保险金（含外购药品/器械）</span>
+        <span class="protection-amount">600万</span>
       </div>
       <div class="protection-row">
-        <span class="protection-name">美团单车及打车意外身故、伤残</span>
-        <span class="protection-amount">100万</span>
+        <span class="protection-name">质子重离子医疗费用保险金</span>
+        <span class="protection-amount">300万</span>
       </div>
       <div class="protection-row">
-        <span class="protection-name">美团定机票/火车票出行的身故、伤残</span>
-        <span class="protection-amount">100万</span>
+        <span class="protection-name">院外特药医疗费用保险金</span>
+        <span class="protection-amount">300万</span>
       </div>
       <div class="protection-row">
-        <span class="protection-name">猝死</span>
-        <span class="protection-amount">20万</span>
+        <span class="protection-name">救护车费用</span>
+        <span class="protection-amount">1000元</span>
       </div>
-      <!-- 免费体验提示 -->
-      <div class="free-trial">
-        <div class="free-icon">免</div>
-        <div class="free-text">
-          <strong>免费体验30天，</strong>30天后升级为全年保障
-        </div>
+      <div class="protection-row" style="border-bottom:none;">
+        <span class="protection-name">住院往返交通费用等7项增值服务</span>
+        <span class="protection-amount" style="color:#E8001C;">赠送</span>
       </div>
     </div>
 
@@ -1062,14 +1135,6 @@ body {
 
     <div class="page-bottom"></div>
   </div><!-- /page-content -->
-
-  <!-- ═══ 悬浮底部按钮 ═══ -->
-  <div class="cta-bottom">
-    <div class="next-btn" id="startBtn" onclick="startActivation()">
-      <span class="free-tag">30天免费</span>
-      开启保障
-    </div>
-  </div>
 
   <!-- ═══ 遮罩 ═══ -->
   <div class="mask" id="mask"></div>
