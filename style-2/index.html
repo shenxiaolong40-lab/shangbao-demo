@@ -1406,10 +1406,9 @@ body {
     else if (!done) { onComplete(); }
   }
 
-  /* ── 投保可回溯下浮层（进入页面自动弹出） ── */
+  /* ── 投保可回溯下浮层 ── */
   let discCountdown = 3;
   let discTimer = null;
-  let disclosureDone = false; // 已阅读过，不再重复弹
 
   function startDisclosureCountdown() {
     discCountdown = 3;
@@ -1426,22 +1425,25 @@ body {
     }, 1000);
   }
 
+  /* 倒计时结束后自动弹出激活弹窗 */
   function onDisclosureConfirm() {
     clearInterval(discTimer);
     discTimer = null;
-    disclosureDone = true;
     document.getElementById('disclosureSheet').classList.remove('show');
-    document.getElementById('mask').classList.remove('show');
+    setTimeout(() => {
+      document.getElementById('popup').classList.add('show');
+      setTimeout(() => requestAnimationFrame(tick), 300);
+    }, 400);
   }
 
-  /* ── 点击「开启保障」按钮触发激活弹窗 ── */
+  /* ── 点击按钮触发可回溯浮层 ── */
   function startActivation() {
     document.getElementById('startBtn').style.pointerEvents = 'none';
     document.getElementById('pageContent').classList.add('blurred');
     document.getElementById('mask').classList.add('show');
     setTimeout(() => {
-      document.getElementById('popup').classList.add('show');
-      setTimeout(() => requestAnimationFrame(tick), 300);
+      document.getElementById('disclosureSheet').classList.add('show');
+      startDisclosureCountdown();
     }, 150);
   }
 
@@ -1463,15 +1465,6 @@ body {
     document.getElementById('paySheet').classList.add('show');
     document.getElementById('abandonBtn').classList.add('show');
   }
-
-  /* ── 页面加载后自动弹出可回溯浮层 ── */
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.getElementById('mask').classList.add('show');
-      document.getElementById('disclosureSheet').classList.add('show');
-      startDisclosureCountdown();
-    }, 600);
-  });
 
   /* ── 被保人信息修改浮层 ── */
   const RELATION_DATA = [
