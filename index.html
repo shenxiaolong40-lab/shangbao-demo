@@ -388,7 +388,7 @@ body {
 }
 
 /* ══════════════════════════════════════
-   激活弹窗 ── 白色卡片风格
+   激活弹窗 ── 金色暗调风格
    ══════════════════════════════════════ */
 
 @keyframes popupEntrance {
@@ -397,7 +397,6 @@ body {
   100% { opacity:1; transform:translate(-50%, -50%) scale(1); }
 }
 
-/* 弹窗外层容器 */
 .popup {
   position: absolute;
   left: 50%;
@@ -419,61 +418,142 @@ body {
   pointer-events: auto;
   animation: popupEntrance 0.48s cubic-bezier(0.22,1.15,0.36,1) both;
 }
-/* 旧的 ::before / ::after 光晕不再使用 */
 .popup::before, .popup::after { display: none; }
 .popup-corner-glow { display: none; }
 .popup-shimmer { display: none; }
 
-/* 顶部插图区（透明背景，展示遮罩层后的模糊页面） */
-.popup-illustration {
+/* 深金暗色 Header */
+.popup-header {
+  background: linear-gradient(135deg, #2C1800 0%, #3E2400 50%, #2A1600 100%);
+  border-radius: 16px 16px 0 0;
+  padding: 20px 20px 22px;
   position: relative;
-  height: 94px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 0;
   overflow: visible;
+  min-height: 86px;
 }
-.popup-illus-svg {
+.popup-header-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #FFFFFF;
+  letter-spacing: 0.5px;
+  line-height: 1.35;
+  max-width: 210px;
+}
+
+/* 金色盾牌（右上角悬浮） */
+.popup-shield {
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 10px;
+  top: -10px;
+  width: 72px;
+  height: 82px;
 }
-/* 被保人 chip，左下角 */
-.popup-insured-chip {
-  position: absolute;
-  bottom: 14px;
-  left: 0;
-  font-size: 17px;
-  color: rgba(255,255,255,0.82);
-  letter-spacing: 0.2px;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  padding-left: 2px;
-  cursor: pointer;
-  transition: opacity 0.15s;
-}
-.popup-insured-chip:active { opacity: 0.7; }
-.popup-insured-chip b { font-weight: 700; color: #fff; }
-.popup-insured-chevron { font-size: 19px; color: rgba(255,255,255,0.6); margin-top: 1px; }
 
 /* 白色卡片主体 */
 .popup-card {
   background: #FFFFFF;
-  border-radius: 16px 16px 0 0;
-  padding: 16px 18px 14px;
-  box-shadow: 0 -2px 16px rgba(0,0,0,0.12);
+  border-radius: 0;
+  padding: 14px 16px 16px;
   position: relative;
 }
-.popup-card-title {
-  font-size: 21px;
-  font-weight: 900;
-  color: #111111;
+
+/* 被保人行 */
+.popup-insured-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   margin-bottom: 14px;
-  letter-spacing: 0.5px;
+  font-size: 14.5px;
+  color: #333;
+  cursor: pointer;
 }
+.insured-label { color: #888; font-size: 13px; }
+.insured-name  { font-weight: 700; color: #1A1A1A; }
+.insured-social-tag {
+  background: #F0F0F0;
+  color: #666;
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid #E0E0E0;
+}
+.insured-edit {
+  color: #888;
+  font-size: 12.5px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* 权益行列表 */
+.benefit-row-list { display: flex; flex-direction: column; gap: 10px; }
+
+.benefit-row {
+  height: 62px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+  opacity: 0;
+  transform: translateX(-18px);
+  transition: opacity 0.42s ease, transform 0.45s cubic-bezier(0.34,1.1,0.64,1);
+  position: relative;
+  overflow: hidden;
+}
+.benefit-row.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+.benefit-row-gold {
+  background: linear-gradient(90deg, #B87E14 0%, #C9941C 30%, #D4A028 70%, #BF8C14 100%);
+  box-shadow: 0 2px 8px rgba(180,130,0,0.28);
+}
+.benefit-row-dark {
+  background: linear-gradient(90deg, #191919 0%, #222222 100%);
+}
+
+.br-icon { font-size: 28px; flex-shrink: 0; line-height: 1; }
+
+.br-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFFFFF;
+  flex: 1;
+  line-height: 1.35;
+  letter-spacing: 0.2px;
+}
+
+/* 圆形「退」按钮 */
+.br-badge-circle {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C8921A, #DBA830);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: #1A1A1A;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: scale(0.3);
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  border: 2px solid rgba(255,255,255,0.18);
+}
+.br-badge-circle.show { opacity: 1; transform: scale(1); }
+
+/* 右上角小标签 */
+.br-tag {
+  position: absolute;
+  top: 6px; right: 8px;
+  background: rgba(255,255,255,0.9);
+  color: #8B6200;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 10px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+}
+.br-tag.show { opacity: 1; transform: scale(1); }
 
 /* 锯齿底边 */
 .popup-scallop {
@@ -482,131 +562,78 @@ body {
   line-height: 0;
 }
 
-/* ── 弹窗内 3 列权益卡片 ── */
-.benefit-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.benefit-card {
-  background: #F6F6F6;
-  border-radius: 10px;
-  padding: 10px 6px 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* Footer（卡片外 → 取消按钮上方） */
+.popup-footer {
+  padding: 12px 16px 10px;
   text-align: center;
-  opacity: 0;
-  transform: perspective(500px) rotateY(90deg);
-  backface-visibility: hidden;
-  transition: transform 0.52s cubic-bezier(0.34, 1.1, 0.64, 1), opacity 0.35s ease;
 }
-.benefit-card.show {
-  opacity: 1;
-  transform: perspective(500px) rotateY(0deg);
-}
-.card-name {
-  font-size: 12px; font-weight: 700; color: #111;
-  margin-bottom: 3px; line-height: 1.35;
-}
-.card-desc {
-  font-size: 10px; color: #999;
-  flex: 1; margin-bottom: 8px; line-height: 1.4;
-}
-.card-badge-wrap { width: 100%; display: flex; justify-content: center; }
-.card-badge {
-  background: #555;
-  color: #fff;
-  font-size: 9.5px; font-weight: 600;
-  padding: 3px 10px; border-radius: 12px;
-  opacity: 0; transform: scale(0.4);
-  transition: opacity 0.28s ease, transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
-}
-.card-badge.show { opacity: 1; transform: scale(1); }
 
-/* 进度条 - 细线灰色 */
-.progress-wrap { margin-bottom: 10px; }
+.popup-price-text {
+  font-size: 12px;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 10px;
+  letter-spacing: 0.2px;
+}
+
+/* 进度条（金色、稍粗） */
+.progress-wrap { margin-bottom: 8px; }
 .progress-track {
-  height: 2px;
-  background: #EBEBEB;
+  height: 4px;
+  background: rgba(255,255,255,0.18);
   border-radius: 99px;
   overflow: hidden;
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .progress-fill {
   height: 100%;
   border-radius: 99px;
-  background: #888888;
+  background: linear-gradient(90deg, #B87E14, #DDAA30, #C89020);
   width: 0%;
   transition: width 0.4s ease;
   position: relative;
 }
 .progress-fill::after { display: none; }
 
-/* 底部状态文字 */
+/* 状态文字 */
 .popup-status-text {
   text-align: center;
-  font-size: 11.5px;
-  color: #AAAAAA;
-  margin-bottom: 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.62);
+  margin-bottom: 10px;
   letter-spacing: 0.3px;
 }
 
-/* 领取权益 按钮 */
+/* 领取权益按钮（完成后出现） */
 .popup-claim-btn {
   width: 100%;
   height: 46px;
-  background: #555555;
+  background: linear-gradient(90deg, #C8921A, #DBA830);
   border-radius: 23px;
   display: flex; align-items: center; justify-content: center;
   font-size: 16px; font-weight: 700;
-  color: #FFFFFF;
+  color: #1A1A1A;
   cursor: pointer;
   letter-spacing: 0.5px;
   transition: opacity 0.15s;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 14px rgba(200,150,0,0.4);
 }
 .popup-claim-btn:active { opacity: 0.8; }
 
-/* 放弃按钮 */
-.cancel-btn {
-  text-align: center;
-  font-size: 11px;
-  color: #BBBBBB;
+/* 圆形 X 取消按钮 */
+.cancel-x-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(55,55,55,0.75);
+  border: 1.5px solid rgba(255,255,255,0.28);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: rgba(255,255,255,0.65);
   cursor: pointer;
-  letter-spacing: 0.3px;
-  display: block;
-  padding: 2px 0;
-  width: fit-content;
   margin: 0 auto;
-  transition: color 0.2s;
+  transition: background 0.2s;
 }
-.cancel-btn:hover { color: #888888; }
-
-/* 弹窗内投保提示 */
-.popup-disclaimer {
-  font-size: 11.5px;
-  color: #555555;
-  line-height: 1.75;
-  padding: 9px 10px;
-  margin-top: 10px;
-  background: #FFF8EE;
-  border-radius: 8px;
-  border: 1px solid #FFE0A0;
-  text-align: left;
-}
-
-/* arrow-bounce (保留，但颜色调整后在白卡不使用) */
-@keyframes arrowBounce {
-  0%,100% { transform:translateX(0); }
-  50%     { transform:translateX(5px); }
-}
-.arrow-bounce {
-  display: inline-block;
-  animation: arrowBounce 0.75s ease-in-out infinite;
-}
+.cancel-x-btn:active { background: rgba(90,90,90,0.9); }
 
 .pay-sheet {
   position:absolute; bottom:0; left:0; right:0;
@@ -685,18 +712,8 @@ body {
 }
 .abandon-btn.show { opacity: 1; pointer-events: auto; }
 
-/* 完成态 - 温暖金绿光晕 */
-.success-overlay {
-  position: absolute; inset: -20px; border-radius: 24px;
-  background: radial-gradient(
-    ellipse at 50% 35%,
-    rgba(0,230,130,0.14) 0%,
-    rgba(255,190,0,0.06) 40%,
-    transparent 70%);
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.6s ease;
-}
-.success-overlay.show { opacity: 1; }
+/* 完成态光晕（新设计中不显示） */
+.success-overlay { display: none !important; }
 
 /* ══════════════════════════════════════
    投保可回溯 下浮层
@@ -1081,74 +1098,72 @@ body {
   <!-- ═══ 激活弹窗 ═══ -->
   <div class="popup" id="popup">
 
-    <!-- 插图区（透明背景，浮在遮罩上方） -->
-    <div class="popup-illustration">
-      <!-- 装饰插图：手持盾牌 -->
-      <svg class="popup-illus-svg" width="220" height="94" viewBox="0 0 220 94" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- 环形光晕 -->
-        <ellipse cx="110" cy="85" rx="72" ry="10" fill="rgba(255,255,255,0.07)"/>
-        <!-- 左侧机甲手套 -->
-        <g>
-          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30 C71 31 73 34 72 42 L71 50 C73 42 77 38 81 40 C85 42 85 50 83 58 L80 64 C82 56 86 54 90 56 C94 58 93 66 91 74 L88 84 L86 90Z" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
-          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" fill="none"/>
-          <!-- 指节线条 -->
-          <path d="M71 48 Q74 44 78 46" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-          <path d="M80 62 Q83 58 87 60" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-        </g>
-        <!-- 右侧机甲手套（镜像） -->
-        <g transform="translate(220,0) scale(-1,1)">
-          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30 C71 31 73 34 72 42 L71 50 C73 42 77 38 81 40 C85 42 85 50 83 58 L80 64 C82 56 86 54 90 56 C94 58 93 66 91 74 L88 84 L86 90Z" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
-          <path d="M58 90 C56 72 54 58 56 44 C57 34 62 28 68 30" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" fill="none"/>
-          <path d="M71 48 Q74 44 78 46" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-          <path d="M80 62 Q83 58 87 60" stroke="rgba(255,255,255,0.35)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
-        </g>
-        <!-- 中心盾牌 -->
-        <path d="M110 14 L88 24 V42 C88 58 97 72 110 78 C123 72 132 58 132 42 V24 Z" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-        <path d="M101 46 L108 53 L120 38" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <!-- 被保人 chip -->
-      <div class="popup-insured-chip" onclick="openInsuredSheet()">
-        <b>被保人 **然</b>
-        <span class="popup-insured-chevron">›</span>
+    <!-- 深金暗色 Header -->
+    <div class="popup-header">
+      <div class="popup-header-title">保障权益领取中</div>
+      <!-- 金色盾牌 -->
+      <div class="popup-shield">
+        <svg width="72" height="82" viewBox="0 0 72 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="shieldGoldGrad" x1="0.3" y1="0" x2="0.7" y2="1">
+              <stop offset="0%" stop-color="#F0D880"/>
+              <stop offset="45%" stop-color="#C8941A"/>
+              <stop offset="100%" stop-color="#9A6C08"/>
+            </linearGradient>
+            <linearGradient id="shieldHighlight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+            <filter id="shieldShadow" x="-25%" y="-15%" width="150%" height="145%">
+              <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="rgba(0,0,0,0.45)"/>
+            </filter>
+          </defs>
+          <!-- 盾牌主体 -->
+          <path d="M36 5 L12 16 V38 C12 58 22 72 36 78 C50 72 60 58 60 38 V16 Z"
+                fill="url(#shieldGoldGrad)" filter="url(#shieldShadow)"/>
+          <!-- 高光层 -->
+          <path d="M36 9 L16 19 V38 C16 56 25 69 36 74"
+                stroke="url(#shieldHighlight)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- 边框 -->
+          <path d="M36 5 L12 16 V38 C12 58 22 72 36 78 C50 72 60 58 60 38 V16 Z"
+                stroke="rgba(255,220,120,0.5)" stroke-width="1.2" fill="none"/>
+          <!-- 白色勾 -->
+          <path d="M23 41 L33 51 L52 28"
+                stroke="white" stroke-width="4.5"
+                stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
       </div>
     </div>
 
     <!-- 白色卡片主体 -->
     <div class="popup-card">
-      <div class="popup-card-title">保障权益领取中</div>
-
-      <!-- 3列权益卡片 -->
-      <div class="benefit-cards-grid">
-        <div class="benefit-card" id="card0">
-          <div class="card-name">1.68元余额</div>
-          <div class="card-desc">体验后立返</div>
-          <div class="card-badge-wrap"><div class="card-badge" id="cbadge0">已激活</div></div>
-        </div>
-        <div class="benefit-card" id="card1">
-          <div class="card-name">30天免费保障</div>
-          <div class="card-desc">体验后立返</div>
-          <div class="card-badge-wrap"><div class="card-badge" id="cbadge1">已激活</div></div>
-        </div>
-        <div class="benefit-card" id="card2">
-          <div class="card-name">未理赔全额退</div>
-          <div class="card-desc">30天后45元/月开启</div>
-          <div class="card-badge-wrap"><div class="card-badge" id="cbadge2">已激活</div></div>
-        </div>
+      <!-- 被保人行 -->
+      <div class="popup-insured-row" onclick="openInsuredSheet()">
+        <span class="insured-label">被保人</span>
+        <span class="insured-name">**然</span>
+        <span class="insured-social-tag">有社保</span>
+        <span class="insured-edit">修改 ›</span>
       </div>
 
-      <div class="progress-wrap">
-        <div class="progress-track">
-          <div class="progress-fill" id="progressFill"></div>
+      <!-- 3条权益行 -->
+      <div class="benefit-row-list">
+        <!-- 行1：金色 · 体验奖励 -->
+        <div class="benefit-row benefit-row-gold" id="card0">
+          <div class="br-icon">🪙</div>
+          <div class="br-text">体验奖励1.68元余额 可提现</div>
+          <div id="cbadge0" style="display:none;"></div>
         </div>
-      </div>
-
-      <div id="bottomArea">
-        <div id="statusText" class="popup-status-text">即将验证身份领权益</div>
-        <!-- 完成后出现的「领取权益」按钮 -->
-        <div class="popup-claim-btn" id="confirmActivationBtn" style="display:none;" onclick="confirmActivation()">领取权益</div>
-        <!-- 兼容旧 JS 引用（隐藏） -->
-        <div id="popupActionRow" class="popup-action-row"></div>
-        <div class="cancel-btn" id="cancelBtnInCard" onclick="cancelActivation()">放弃保障权益</div>
+        <!-- 行2：深色 · 30天免费 -->
+        <div class="benefit-row benefit-row-dark" id="card1">
+          <div class="br-text">30天保障免费体验 享无理由退</div>
+          <div class="br-badge-circle" id="cbadge1">退</div>
+        </div>
+        <!-- 行3：金色 · 全额退 -->
+        <div class="benefit-row benefit-row-gold" id="card2">
+          <div class="br-icon">📢</div>
+          <div class="br-text">续费后未理赔 可全额退</div>
+          <div class="br-tag" id="cbadge2">32天内</div>
+        </div>
       </div>
     </div>
 
@@ -1183,9 +1198,24 @@ body {
       <rect width="335" height="12" fill="white" mask="url(#scallop-mask)"/>
     </svg>
 
-    <!-- success-overlay: 保留节点供 JS 引用，新设计中不显示 -->
+    <!-- Footer：价格提示 + 进度条 + 状态 -->
+    <div class="popup-footer">
+      <div class="popup-price-text">首月免费,到期后按45元/月续费</div>
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+      <div id="statusText" class="popup-status-text">权益正在激活中</div>
+      <div class="popup-claim-btn" id="confirmActivationBtn" style="display:none;" onclick="confirmActivation()">领取权益</div>
+      <div id="popupActionRow" class="popup-action-row"></div>
+    </div>
+
+    <!-- 圆形 X 取消按钮 -->
+    <div class="cancel-x-btn" id="cancelBtnInCard" onclick="cancelActivation()">×</div>
+
+    <!-- 保留供 JS 引用 -->
     <div id="successOverlay" style="display:none;"></div>
-    <!-- shieldCheck: 保留供 JS 引用 -->
     <path id="shieldCheck" style="display:none;"></path>
   </div>
 
@@ -1350,8 +1380,8 @@ body {
   function onComplete() {
     done = true;
     document.getElementById('progressFill').style.width = '100%';
-    document.getElementById('statusText').textContent = '权益激活完成，点击下方确认';
-    document.getElementById('statusText').style.color = '#1A1A1A';
+    document.getElementById('statusText').textContent = '权益激活完成，点击下方领取';
+    document.getElementById('statusText').style.color = 'rgba(255,220,120,0.9)';
     document.getElementById('statusText').style.fontWeight = '600';
     setTimeout(() => {
       document.getElementById('confirmActivationBtn').style.display = '';
@@ -1494,7 +1524,7 @@ body {
       }
       const statusEl = document.getElementById('statusText');
       if (statusEl) {
-        statusEl.textContent = '即将验证身份领权益';
+        statusEl.textContent = '权益正在激活中';
         statusEl.style.color = '';
         statusEl.style.fontWeight = '';
       }
